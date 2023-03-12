@@ -1,0 +1,24 @@
+[0.319s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--packages-up-to', 'carla_l5player_bridge_ego_vis']
+[0.319s] DEBUG:colcon:Parsed command line arguments: Namespace(allow_overriding=[], ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7f3a4066caf0>>, merge_install=False, metas=['./colcon.meta'], mixin=None, mixin_files=None, mixin_verb=('build',), packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=['carla_l5player_bridge_ego_vis'], packages_up_to_regex=None, parallel_workers=24, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7f3a4066caf0>, verb_name='build', verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7f3a405fd100>)
+[0.352s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.352s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.353s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.353s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.353s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.353s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.353s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_hybridastar_planner'
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.353s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.363s] DEBUG:colcon.colcon_core.package_identification:Package '.' with type 'ros.ament_cmake' and name 'carla_l5player_hybridastar_planner'
+[0.363s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.363s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.363s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.363s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.363s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults

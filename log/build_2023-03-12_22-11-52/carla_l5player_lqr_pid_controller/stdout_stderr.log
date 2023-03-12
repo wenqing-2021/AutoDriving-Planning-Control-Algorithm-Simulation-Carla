@@ -1,0 +1,103 @@
+-- The C compiler identification is GNU 9.4.0
+-- The CXX compiler identification is GNU 9.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 0.9.11 (/opt/ros/foxy/share/ament_cmake/cmake)
+-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+-- Using PYTHON_EXECUTABLE: /usr/bin/python3
+-- Found std_msgs: 2.0.5 (/opt/ros/foxy/share/std_msgs/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Found rosidl_adapter: 1.3.0 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+-- Found FastRTPS: /opt/ros/foxy/include  
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found nav_msgs: 2.0.5 (/opt/ros/foxy/share/nav_msgs/cmake)
+-- Found sensor_msgs: 2.0.5 (/opt/ros/foxy/share/sensor_msgs/cmake)
+-- Found visualization_msgs: 2.0.5 (/opt/ros/foxy/share/visualization_msgs/cmake)
+-- Found rclcpp: 2.4.2 (/opt/ros/foxy/share/rclcpp/cmake)
+-- Found rmw_implementation_cmake: 1.0.3 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+-- Using RMW implementation 'rmw_fastrtps_cpp' as default
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found tf2: 0.13.13 (/opt/ros/foxy/share/tf2/cmake)
+-- Found tf2_ros: 0.13.13 (/opt/ros/foxy/share/tf2_ros/cmake)
+-- Found tf2_geometry_msgs: 0.13.13 (/opt/ros/foxy/share/tf2_geometry_msgs/cmake)
+-- Found eigen3_cmake_module: 0.1.1 (/opt/ros/foxy/share/eigen3_cmake_module/cmake)
+-- Found Eigen3: TRUE (found version "3.3.7") 
+-- Found carla_msgs: 1.3.0 (/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_msgs/share/carla_msgs/cmake)
+-- Found ament_lint_auto: 0.9.7 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+-- Added test 'copyright' to check source files copyright and LICENSE
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: $<BUILD_INTERFACE:/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_lqr_pid_controller/include>
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'cpplint' to check C / C++ code against the Google style
+-- Configured cpplint exclude dirs and/or files: 
+-- Added test 'flake8' to check Python code syntax and style conventions
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'pep257' to check Python code against some of the style conventions in PEP 257
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_lqr_pid_controller
+[35m[1mScanning dependencies of target lqr_lateral_pid_longitudinal[0m
+[ 20%] [32mBuilding CXX object CMakeFiles/lqr_lateral_pid_longitudinal.dir/src/pid_controller.cpp.o[0m
+[ 40%] [32mBuilding CXX object CMakeFiles/lqr_lateral_pid_longitudinal.dir/src/lqr_lateral_pid_longitudinal.cpp.o[0m
+[ 60%] [32mBuilding CXX object CMakeFiles/lqr_lateral_pid_longitudinal.dir/src/reference_line.cpp.o[0m
+[ 80%] [32mBuilding CXX object CMakeFiles/lqr_lateral_pid_longitudinal.dir/src/lqr_controller.cpp.o[0m
+[01m[K/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_lqr_pid_controller/src/lqr_controller.cpp:[m[K In member function ‘[01m[Kvoid l5player::control::LqrController::UpdateMatrix(const VehicleState&)[m[K’:
+[01m[K/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_lqr_pid_controller/src/lqr_controller.cpp:204:54:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kvehicle_state[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+  204 | void LqrController::UpdateMatrix([01;35m[Kconst VehicleState &vehicle_state[m[K) {
+      |                                  [01;35m[K~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~[m[K
+[01m[K/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_lqr_pid_controller/src/lqr_controller.cpp:[m[K In member function ‘[01m[Kdouble l5player::control::LqrController::ComputeFeedForward(const VehicleState&, double)[m[K’:
+[01m[K/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_lqr_pid_controller/src/lqr_controller.cpp:210:62:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Klocalization[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+  210 | double LqrController::ComputeFeedForward([01;35m[Kconst VehicleState &localization[m[K, double ref_curvature) {
+      |                                          [01;35m[K~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~[m[K
+[01m[K/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_lqr_pid_controller/src/lqr_controller.cpp:[m[K In member function ‘[01m[Kvoid l5player::control::LqrController::ComputeLateralErrors(double, double, double, double, double, double, LateralControlErrorPtr&)[m[K’:
+[01m[K/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_lqr_pid_controller/src/lqr_controller.cpp:218:154:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Klinear_a[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+  218 | void LqrController::ComputeLateralErrors(const double x, const double y, const double theta, const double linear_v, const double angular_v, [01;35m[Kconst double linear_a[m[K, LateralControlErrorPtr &lat_con_err) {
+      |                                                                                                                                             [01;35m[K~~~~~~~~~~~~~^~~~~~~~[m[K
+[100%] [32m[1mLinking CXX executable lqr_lateral_pid_longitudinal[0m
+[100%] Built target lqr_lateral_pid_longitudinal
+-- Install configuration: ""
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/lib/carla_l5player_lqr_pid_controller/lqr_lateral_pid_longitudinal
+-- Set runtime path of "/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/lib/carla_l5player_lqr_pid_controller/lqr_lateral_pid_longitudinal" to ""
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller//launch
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller//launch/lqr_launch.py
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller//config
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller//config/lqr_parameters_configuration.yaml
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller//rviz
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller//rviz/lqr_vis.rviz
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/ament_index/resource_index/package_run_dependencies/carla_l5player_lqr_pid_controller
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/ament_index/resource_index/parent_prefix_path/carla_l5player_lqr_pid_controller
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/environment/ament_prefix_path.sh
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/environment/ament_prefix_path.dsv
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/environment/path.sh
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/environment/path.dsv
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/local_setup.bash
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/local_setup.sh
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/local_setup.zsh
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/local_setup.dsv
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/package.dsv
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/ament_index/resource_index/packages/carla_l5player_lqr_pid_controller
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/cmake/carla_l5player_lqr_pid_controllerConfig.cmake
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/cmake/carla_l5player_lqr_pid_controllerConfig-version.cmake
+-- Installing: /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_lqr_pid_controller/share/carla_l5player_lqr_pid_controller/package.xml

@@ -1,0 +1,56 @@
+running egg_info
+creating ../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info
+writing ../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/PKG-INFO
+writing dependency_links to ../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/dependency_links.txt
+writing entry points to ../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/entry_points.txt
+writing requirements to ../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/requires.txt
+writing top-level names to ../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/top_level.txt
+writing manifest file '../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/SOURCES.txt'
+reading manifest file '../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/SOURCES.txt'
+writing manifest file '../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis
+copying carla_l5player_bridge_ego_vis/hybridastar_initial_wolrd_node.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis
+copying carla_l5player_bridge_ego_vis/carla_l5player_vis_ego_vehicle.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis
+copying carla_l5player_bridge_ego_vis/longitudinal_control_pid.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis
+copying carla_l5player_bridge_ego_vis/__init__.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis
+copying carla_l5player_bridge_ego_vis/official_demo.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis
+copying carla_l5player_bridge_ego_vis/reference_line_recorder.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis
+running install
+running install_lib
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis/hybridastar_initial_wolrd_node.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis/carla_l5player_vis_ego_vehicle.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis/longitudinal_control_pid.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis/__init__.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis/official_demo.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/build/lib/carla_l5player_bridge_ego_vis/reference_line_recorder.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis/hybridastar_initial_wolrd_node.py to hybridastar_initial_wolrd_node.cpython-38.pyc
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis/carla_l5player_vis_ego_vehicle.py to carla_l5player_vis_ego_vehicle.cpython-38.pyc
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis/longitudinal_control_pid.py to longitudinal_control_pid.cpython-38.pyc
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis/__init__.py to __init__.cpython-38.pyc
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis/official_demo.py to official_demo.cpython-38.pyc
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis/reference_line_recorder.py to reference_line_recorder.cpython-38.pyc
+running install_data
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/ament_index
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/ament_index/resource_index
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/ament_index/resource_index/packages
+copying resource/carla_l5player_bridge_ego_vis -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/ament_index/resource_index/packages
+copying package.xml -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/carla_l5player_bridge_ego_vis
+copying launch/carla_bridge_ego_vehilce.launch.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/carla_l5player_bridge_ego_vis
+copying launch/carla_bridge_ego_vehicle_park.launch.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/carla_l5player_bridge_ego_vis
+copying launch/command_control.launch.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/carla_l5player_bridge_ego_vis
+copying launch/reference_line_recorder.launch.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/carla_l5player_bridge_ego_vis
+copying launch/carla_l5player_vis_ego_vehicle.launch.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/carla_l5player_bridge_ego_vis
+copying launch/carla_recorder_ego_vehicle.launch.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/share/carla_l5player_bridge_ego_vis
+running install_egg_info
+Copying ../../../build/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis.egg-info to /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/python3.8/site-packages/carla_l5player_bridge_ego_vis-0.0.0-py3.8.egg-info
+running install_scripts
+Installing carla_l5player_vis_ego_vehicle script to /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/carla_l5player_bridge_ego_vis
+Installing hybridastar_initial_wolrd_node script to /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/carla_l5player_bridge_ego_vis
+Installing longitudinal_control_pid script to /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/carla_l5player_bridge_ego_vis
+Installing reference_line_recorder script to /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/carla_l5player_bridge_ego_vis/lib/carla_l5player_bridge_ego_vis
+writing list of installed files to '/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/carla_l5player_bridge_ego_vis/install.log'

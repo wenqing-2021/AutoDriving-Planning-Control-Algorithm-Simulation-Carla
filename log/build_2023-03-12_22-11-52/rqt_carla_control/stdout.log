@@ -1,0 +1,47 @@
+running egg_info
+creating ../../../build/rqt_carla_control/rqt_carla_control.egg-info
+writing ../../../build/rqt_carla_control/rqt_carla_control.egg-info/PKG-INFO
+writing dependency_links to ../../../build/rqt_carla_control/rqt_carla_control.egg-info/dependency_links.txt
+writing requirements to ../../../build/rqt_carla_control/rqt_carla_control.egg-info/requires.txt
+writing top-level names to ../../../build/rqt_carla_control/rqt_carla_control.egg-info/top_level.txt
+writing manifest file '../../../build/rqt_carla_control/rqt_carla_control.egg-info/SOURCES.txt'
+reading manifest file '../../../build/rqt_carla_control/rqt_carla_control.egg-info/SOURCES.txt'
+writing manifest file '../../../build/rqt_carla_control/rqt_carla_control.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/lib
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/lib/rqt_carla_control
+copying src/rqt_carla_control/rqt_carla_control.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/lib/rqt_carla_control
+copying src/rqt_carla_control/__init__.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/lib/rqt_carla_control
+running build_scripts
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/scripts-3.8
+copying and adjusting scripts/rqt_carla_control -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/scripts-3.8
+changing mode of /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/scripts-3.8/rqt_carla_control from 664 to 775
+running install
+running install_lib
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/lib/rqt_carla_control/rqt_carla_control.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/lib/rqt_carla_control/__init__.py -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control/rqt_carla_control.py to rqt_carla_control.cpython-38.pyc
+byte-compiling /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control/__init__.py to __init__.cpython-38.pyc
+running install_data
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/ament_index
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/ament_index/resource_index
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/ament_index/resource_index/packages
+copying resource/rqt_carla_control -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/ament_index/resource_index/packages
+copying package.xml -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/rqt_carla_control
+copying plugin.xml -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/rqt_carla_control
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/rqt_carla_control/resource
+copying resource/CarlaControl.ui -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/rqt_carla_control/resource
+copying resource/pause.png -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/rqt_carla_control/resource
+copying resource/play.png -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/rqt_carla_control/resource
+copying resource/step_once.png -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/share/rqt_carla_control/resource
+creating /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/rqt_carla_control
+copying scripts/rqt_carla_control -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/rqt_carla_control
+running install_egg_info
+Copying ../../../build/rqt_carla_control/rqt_carla_control.egg-info to /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control-0.0.0-py3.8.egg-info
+running install_scripts
+copying /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build/scripts-3.8/rqt_carla_control -> /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/rqt_carla_control
+changing mode of /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/rqt_carla_control/rqt_carla_control to 775
+writing list of installed files to '/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/install.log'

@@ -1,0 +1,8 @@
+source;share/carla_l5player_pid_new_controller/hook/cmake_prefix_path.ps1
+source;share/carla_l5player_pid_new_controller/hook/cmake_prefix_path.dsv
+source;share/carla_l5player_pid_new_controller/hook/cmake_prefix_path.sh
+source;share/carla_l5player_pid_new_controller/local_setup.bash
+source;share/carla_l5player_pid_new_controller/local_setup.dsv
+source;share/carla_l5player_pid_new_controller/local_setup.ps1
+source;share/carla_l5player_pid_new_controller/local_setup.sh
+source;share/carla_l5player_pid_new_controller/local_setup.zsh

@@ -1,0 +1,21 @@
+[0.963s] Invoking command in '/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/ros-bridge/rqt_carla_control': PYTHONPATH=/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/prefix_override:/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/rqt_carla_control build --build-base /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build install --record /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/install.log --single-version-externally-managed
+[1.111s] running egg_info
+[1.112s] writing ../../../build/rqt_carla_control/rqt_carla_control.egg-info/PKG-INFO
+[1.112s] writing dependency_links to ../../../build/rqt_carla_control/rqt_carla_control.egg-info/dependency_links.txt
+[1.112s] writing requirements to ../../../build/rqt_carla_control/rqt_carla_control.egg-info/requires.txt
+[1.112s] writing top-level names to ../../../build/rqt_carla_control/rqt_carla_control.egg-info/top_level.txt
+[1.135s] reading manifest file '../../../build/rqt_carla_control/rqt_carla_control.egg-info/SOURCES.txt'
+[1.135s] writing manifest file '../../../build/rqt_carla_control/rqt_carla_control.egg-info/SOURCES.txt'
+[1.135s] running build
+[1.135s] running build_py
+[1.136s] running build_scripts
+[1.136s] running install
+[1.136s] running install_lib
+[1.137s] running install_data
+[1.138s] running install_egg_info
+[1.141s] removing '/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control-0.0.0-py3.8.egg-info' (and everything under it)
+[1.141s] Copying ../../../build/rqt_carla_control/rqt_carla_control.egg-info to /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages/rqt_carla_control-0.0.0-py3.8.egg-info
+[1.145s] running install_scripts
+[1.181s] changing mode of /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/rqt_carla_control/rqt_carla_control to 775
+[1.181s] writing list of installed files to '/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/install.log'
+[1.205s] Invoked command in '/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/ros-bridge/rqt_carla_control' returned '0': PYTHONPATH=/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/prefix_override:/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/install/rqt_carla_control/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/rqt_carla_control build --build-base /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/build install --record /home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/build/rqt_carla_control/install.log --single-version-externally-managed

@@ -1,0 +1,4 @@
+source;share/carla_l5player_stanley_pid_controller/local_setup.bash
+source;share/carla_l5player_stanley_pid_controller/local_setup.dsv
+source;share/carla_l5player_stanley_pid_controller/local_setup.sh
+source;share/carla_l5player_stanley_pid_controller/local_setup.zsh
