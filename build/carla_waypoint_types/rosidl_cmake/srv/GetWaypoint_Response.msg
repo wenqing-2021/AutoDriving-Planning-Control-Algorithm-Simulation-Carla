@@ -1,2 +1,0 @@
-
-carla_waypoint_types/CarlaWaypoint waypoint

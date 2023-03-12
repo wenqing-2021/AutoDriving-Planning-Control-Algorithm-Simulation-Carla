@@ -1,3 +1,0 @@
-source;share/rviz_carla_plugin/environment/ament_prefix_path.sh
-source;share/rviz_carla_plugin/environment/library_path.sh
-source;share/rviz_carla_plugin/environment/path.sh

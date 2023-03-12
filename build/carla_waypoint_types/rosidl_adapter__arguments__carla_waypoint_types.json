@@ -1,8 +1,0 @@
-{
-  "package_name": "carla_waypoint_types",
-  "non_idl_tuples": [
-    "/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/ros-bridge/carla_waypoint_types:msg/CarlaWaypoint.msg",
-    "/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/ros-bridge/carla_waypoint_types:srv/GetWaypoint.srv",
-    "/home/jay/Documents/AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/ros-bridge/carla_waypoint_types:srv/GetActorWaypoint.srv"
-  ]
-}
