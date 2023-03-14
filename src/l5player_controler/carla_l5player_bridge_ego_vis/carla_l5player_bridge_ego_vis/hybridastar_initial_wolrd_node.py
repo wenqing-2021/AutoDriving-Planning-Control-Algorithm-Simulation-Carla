@@ -6,7 +6,12 @@ from rclpy.node import Node
 class InitialWorld(Node):
     def __init__(self):
         super().__init__('HybridAstar_InitialWorld')
-        
+        self.declare_parameter("map_max_x", 170.0)
+        self.declare_parameter("map_min_x", 15.0)
+        self.declare_parameter("map_max_y", -200)
+        self.declare_parameter("map_min_y", -300)
+        self.declare_parameter("resolution", 0.5)
+
         self.initial_town()
         
     def initial_town(self):

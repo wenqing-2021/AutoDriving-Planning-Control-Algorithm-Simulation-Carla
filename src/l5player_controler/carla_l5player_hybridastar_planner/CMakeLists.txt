@@ -17,9 +17,18 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+
+add_executable(visual_node src/visualization.cpp)
+ament_target_dependencies(visual_node rclcpp std_msgs visualization_msgs Eigen3)
+
+install(TARGET visual_node
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
