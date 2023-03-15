@@ -5,15 +5,16 @@ from rclpy.node import Node
 
 class InitialWorld(Node):
     def __init__(self):
-        super().__init__('HybridAstar_InitialWorld')
+        super().__init__('hybridastar_initial_wolrd')
+        self.get_logger().info("initial_world.....")
+    
+    def declare_param(self):
         self.declare_parameter("map_max_x", 170.0)
         self.declare_parameter("map_min_x", 15.0)
-        self.declare_parameter("map_max_y", -200)
-        self.declare_parameter("map_min_y", -300)
+        self.declare_parameter("map_max_y", -200.0)
+        self.declare_parameter("map_min_y", -300.0)
         self.declare_parameter("resolution", 0.5)
-
-        self.initial_town()
-        
+    
     def initial_town(self):
         # get client
         carla_client = carla.Client(host='localhost', port=2000)
@@ -52,9 +53,11 @@ def main(args=None):
     rclpy.init(args=args)
     # clear all obstacles
     initial_world = InitialWorld()
-    rclpy.spin_once(initial_world)
+    initial_world.initial_town()
+    initial_world.declare_param()
+    rclpy.spin(initial_world)
     # shutdown
-    initial_world.destroy_node()
+    # initial_world.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':

@@ -25,7 +25,7 @@ setup(
             'longitudinal_control_pid = carla_l5player_bridge_ego_vis.longitudinal_control_pid:main',
             'reference_line_recorder = carla_l5player_bridge_ego_vis.reference_line_recorder:main',
             'carla_l5player_vis_ego_vehicle = carla_l5player_bridge_ego_vis.carla_l5player_vis_ego_vehicle:main',
-            'hybridastar_initial_wolrd_node = carla_l5player_bridge_ego_vis.hybridastar_initial_wolrd_node:main',
+            'hybridastar_initial_wolrd = carla_l5player_bridge_ego_vis.hybridastar_initial_wolrd_node:main',
         ],
     },
 )

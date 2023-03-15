@@ -23,10 +23,14 @@ find_package(visualization_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
-add_executable(visual_node src/visualization.cpp)
-ament_target_dependencies(visual_node rclcpp std_msgs visualization_msgs Eigen3)
+add_executable(hybridastar_visual 
+               src/visualization.cpp)
+target_include_directories(hybridastar_visual PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(hybridastar_visual rclcpp std_msgs visualization_msgs Eigen3)
 
-install(TARGET visual_node
+install(TARGETS hybridastar_visual
   DESTINATION lib/${PROJECT_NAME}
 )
 
