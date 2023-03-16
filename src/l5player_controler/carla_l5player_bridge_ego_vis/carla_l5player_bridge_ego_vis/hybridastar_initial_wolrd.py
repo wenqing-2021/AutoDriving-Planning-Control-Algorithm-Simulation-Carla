@@ -1,5 +1,14 @@
+'''
+Author: wenqing-2021 1140349586@qq.com
+Date: 2023-03-12 20:25:46
+LastEditors: wenqing-2021 1140349586@qq.com
+LastEditTime: 2023-03-16 22:16:58
+FilePath: /AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis/hybridastar_initial_wolrd.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 #!/usr/bin/env python
 import carla
+import time
 import rclpy
 from rclpy.node import Node
 

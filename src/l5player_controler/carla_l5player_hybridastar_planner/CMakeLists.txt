@@ -19,6 +19,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
@@ -28,7 +29,7 @@ add_executable(hybridastar_visual
 target_include_directories(hybridastar_visual PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(hybridastar_visual rclcpp std_msgs visualization_msgs Eigen3)
+ament_target_dependencies(hybridastar_visual rclcpp std_msgs nav_msgs visualization_msgs Eigen3)
 
 install(TARGETS hybridastar_visual
   DESTINATION lib/${PROJECT_NAME}
