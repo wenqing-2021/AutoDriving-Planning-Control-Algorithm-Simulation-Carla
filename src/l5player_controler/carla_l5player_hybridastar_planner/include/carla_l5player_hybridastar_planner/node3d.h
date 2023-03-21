@@ -11,7 +11,7 @@ struct GridNode;
 typedef GridNode* GridNodePtr;
 
 struct GridNode{
-    int id; // 1 --> openset, -1 --> closed set
+    int id; // 1 --> openset, -1 --> closed set, 0 --> initial node
     Eigen::Vector3d pose;
     Eigen::Vector2i index;
 

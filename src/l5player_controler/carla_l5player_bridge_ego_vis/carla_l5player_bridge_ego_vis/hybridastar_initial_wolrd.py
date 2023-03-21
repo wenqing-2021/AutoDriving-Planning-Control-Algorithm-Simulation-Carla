@@ -1,13 +1,17 @@
 '''
-Author: wenqing-2021 1140349586@qq.com
-Date: 2023-03-12 20:25:46
-LastEditors: wenqing-2021 1140349586@qq.com
-LastEditTime: 2023-03-16 22:16:58
+Author: wenqing-2021 yuansj@hnu.edu.cn
+Date: 2023-03-12
+LastEditors: wenqing-2021
+LastEditTime: 2023-03-21
 FilePath: /AutoDriving-Planning-Control-Algorithm-Simulation-Carla/src/l5player_controler/carla_l5player_bridge_ego_vis/carla_l5player_bridge_ego_vis/hybridastar_initial_wolrd.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+Description: 
+
+Copyright (c) 2023 by wenqing, All Rights Reserved. 
 '''
+
 #!/usr/bin/env python
 import carla
+import numpy as np
 import time
 import rclpy
 from rclpy.node import Node
@@ -66,7 +70,7 @@ def main(args=None):
     initial_world.declare_param()
     rclpy.spin(initial_world)
     # shutdown
-    # initial_world.destroy_node()
+    initial_world.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
