@@ -19,7 +19,7 @@ class HybridAstarNode : public rclcpp :: Node {
     */
     public:
         HybridAstarNode();
-        ~HybridAstarNode();
+        ~HybridAstarNode(){};
         
         bool SearchPath(const Eigen::Vector3d & start_pt, 
                     const Eigen::Vector3d & end_pt);
@@ -56,7 +56,7 @@ class HybridAstarNode : public rclcpp :: Node {
         bool start_ = false; // if get the start position, change to true. if reach the goal ,change to false 
         double max_steering_angle_;
         double min_steering_angle_;
-        int discrete_num_; // should be a 
+        int discrete_num_; // 
         double max_v_;
         double min_v_;
 

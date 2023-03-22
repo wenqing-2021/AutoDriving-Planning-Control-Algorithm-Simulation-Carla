@@ -3,7 +3,7 @@
 using namespace l5player::planner;
 using namespace std::chrono_literals;
 
-HybridAstarNode::HybridAstarNode() : Node("hybrid_a_star"){
+HybridAstarNode::HybridAstarNode() : Node("hybridastar_search"){
     
     if (!HybridAstarNode::InitialMap()){
         RCLCPP_WARN(this->get_logger(), "Failed to Initial map");
@@ -48,6 +48,8 @@ bool HybridAstarNode::InitialMap(){
             GridNodeMap[i][j] = new GridNode(tmp_index, tmp_pose);
         }
     }
+
+    return true;
 }
 
 bool HybridAstarNode::InitialHybrid(){
@@ -56,6 +58,8 @@ bool HybridAstarNode::InitialHybrid(){
     this->declare_parameter<double>("max_steering_angle", max_steering_angle_);
     this->declare_parameter<double>("min_steering_angle", min_steering_angle_);
     this->declare_parameter<double>("discrete_num", discrete_num_);
+
+    return true;
 }
 
 void HybridAstarNode::VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_pose_msg){
@@ -85,6 +89,13 @@ void HybridAstarNode::VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr veh
 Eigen::Vector3d HybridAstarNode::GridIndex2Pose(const Eigen::Vector2i & grid_index){
     int index_x = grid_index[0];
     int index_y = grid_index[1];
+
+    Eigen::Vector3d pose;
+    pose[0] = index_x * map_resolution_ + map_xl;
+    pose[1] = index_y * map_resolution_ + map_yl;
+    pose[2] = 0.0;
+
+    return pose;
 }
 
 Eigen::Vector2i HybridAstarNode::Pose2GridIndex(const Eigen::Vector3d & vehicle_pose){
@@ -99,19 +110,24 @@ Eigen::Vector2i HybridAstarNode::Pose2GridIndex(const Eigen::Vector3d & vehicle_
     return grid_index;
 }
 
-bool ExpandNode(GridNodePtr current_pt, std::vector<GridNodePtr> & neighbor_pt, std::vector<double> & neighbor_costs){
-    Eigen::Vector3d node_pose = current_pt->pose;
+// bool ExpandNode(GridNodePtr current_pt, std::vector<GridNodePtr> & neighbor_pt, std::vector<double> & neighbor_costs){
+//     Eigen::Vector3d node_pose = current_pt->pose;
     
-    // expand node pose
-    
-}
 
-bool HybridAstarNode::SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose){
+//     return true;
+//     // expand node pose
     
-}
+// }
+
+// bool HybridAstarNode::SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose){
+//     return true;
+// }
 
 
 int main(int argc, char **argv){
     rclcpp::init(argc, argv);
+    auto hybridastar_node = std::make_shared<HybridAstarNode>();
+    rclcpp::spin(hybridastar_node);
+    rclcpp::shutdown();
     return 0;
 }

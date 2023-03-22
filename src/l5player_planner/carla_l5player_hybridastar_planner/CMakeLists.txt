@@ -26,12 +26,24 @@ find_package(tf2_geometry_msgs REQUIRED)
 
 add_executable(hybridastar_visual 
                src/visualization.cpp)
+
+add_executable(hybridastar_search 
+               src/hybrid_a_star.cpp)
+
 target_include_directories(hybridastar_visual PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(hybridastar_visual rclcpp std_msgs nav_msgs visualization_msgs Eigen3)
 
-install(TARGETS hybridastar_visual
+target_include_directories(hybridastar_search PUBLIC
+$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+$<INSTALL_INTERFACE:include>)
+
+ament_target_dependencies(hybridastar_visual rclcpp std_msgs nav_msgs visualization_msgs Eigen3)
+ament_target_dependencies(hybridastar_search rclcpp std_msgs nav_msgs visualization_msgs Eigen3)
+
+install(TARGETS 
+  hybridastar_visual
+  hybridastar_search
   DESTINATION lib/${PROJECT_NAME}
 )
 
