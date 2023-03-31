@@ -36,9 +36,6 @@ bool HybridAstarNode::InitialMap(){
     map_y_size_ = (int)((map_yu - map_yl) / map_resolution_);
     map_xy_size_ = map_x_size_ * map_y_size_;
 
-    map_value_ = new uint8_t [map_xy_size_];
-    memset(map_value_, 0, map_xy_size_ * sizeof(uint8_t)); // initial the map value
-
     GridNodeMap = new GridNodePtr * [map_x_size_]; // 二级指针
     for (int i = 0; i < map_x_size_; i++){
         GridNodeMap[i] = new GridNodePtr [map_y_size_];
@@ -70,12 +67,7 @@ void HybridAstarNode::VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr veh
     tf2::convert(vehicle_pose_msg->pose.pose.orientation, quat_tf);
     tf2::Matrix3x3(quat_tf).getRPY(vehicle_roll, vehicle_pitch, vehicle_yaw);
     vehicle_yaw -= M_PI/2 ;
-    while (vehicle_yaw < -M_PI){
-        vehicle_yaw += M_2_PI;
-    }
-    while (vehicle_yaw > M_PI){
-        vehicle_yaw -= M_2_PI;
-    }
+    PI2PI(vehicle_yaw);
 
     if (!start_){
         start_pose[0] = vehicle_x;
@@ -86,14 +78,22 @@ void HybridAstarNode::VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr veh
     }
 }
 
+void HybridAstarNode::PI2PI(double & theta){
+    while (theta < -M_PI){
+        theta += M_2_PI;
+    }
+    while (theta > M_PI){
+        theta -= M_2_PI;
+    }
+}
+
 Eigen::Vector3d HybridAstarNode::GridIndex2Pose(const Eigen::Vector2i & grid_index){
     int index_x = grid_index[0];
     int index_y = grid_index[1];
 
-    Eigen::Vector3d pose;
-    pose[0] = index_x * map_resolution_ + map_xl;
-    pose[1] = index_y * map_resolution_ + map_yl;
-    pose[2] = 0.0;
+    Eigen::Vector3d pose(index_x * map_resolution_ + map_xl,
+                         index_y * map_resolution_ + map_yl,
+                         0.0);
 
     return pose;
 }
@@ -110,14 +110,127 @@ Eigen::Vector2i HybridAstarNode::Pose2GridIndex(const Eigen::Vector3d & vehicle_
     return grid_index;
 }
 
-// bool ExpandNode(GridNodePtr current_pt, std::vector<GridNodePtr> & neighbor_pt, std::vector<double> & neighbor_costs){
-//     Eigen::Vector3d node_pose = current_pt->pose;
+bool HybridAstarNode::CollisionCheck(const Eigen::Vector3d & current_pose){
+    bool collision = false;
+
+    Eigen::MatrixXd circle_position(circle_num, 2);
+
+    // we use fitted circles for collision check
+    double radius = 0.5 * sqrt(pow(vehicle_.length / circle_num, 2) + pow(vehicle_.width, 2));
+    for (int i = 0; i < circle_num; ++i){
+        double coefficient = (vehicle_.length - vehicle_.wheelbase) / 2 + vehicle_.wheelbase + vehicle_.length / circle_num * (0.5 - i);
+        circle_position[i,0] = vehicle_.x + coefficient * cos(current_pose[2]);
+        circle_position[i,1] = vehicle_.y + coefficient * sin(current_pose[2]);
+    }
+
+    return collision;
+}
+
+double HybridAstarNode::ComputeH(const GridNodePtr &node1, const GridNodePtr &node2){
+    double distance;
+
+    // use manhattan distance
+    Eigen::Vector2i index_1 = node1->index;
+    Eigen::Vector2i index_2 = node2->index;
+
+    distance = std::sqrt(pow((index_1[0] - index_2[0]), 2) + pow((index_1[1] - index_2[1]), 2));
+
+    return distance;
+}
+
+double HybridAstarNode::ComputeG(const GridNodePtr &node1, const GridNodePtr &node2){
+    double g_value;
+    double cost_gear;
+    double cost_heading;
+
+    Eigen::Vector3d pose_1 = node1->pose;
+    Eigen::Vector3d pose_2 = node2->pose;
+
+    cost_heading = coeffi_heading * abs(pose_2[2] - pose_1[1]);
+    if (node2->gear != node1->gear){
+        cost_gear = coeffi_gear * g_gear;
+    }
+    else{
+        cost_gear = 0.0;
+    }
+
+    g_value = cost_heading + cost_gear;
+
+    return node1->g_score + g_value;
+}
+
+
+bool HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
+    Eigen::Vector3d current_pose = current_pt->pose;
+    int gear[] = {1, -1};
+    double delta_angle = (max_steering_angle_ - min_steering_angle_) / (discrete_num_ - 1);
+    // expand node
+    for (auto gear_i : gear){
+        double ds = delta_ds_ * gear_i;
+        for (int i = 0; i < discrete_num_; ++i){
+            double steering_angle_i = min_steering_angle_ + i * delta_angle;
+            double heading_i = current_pose[2] + ds * tan(steering_angle_i) / vehicle_.wheelbase;
+            PI2PI(heading_i);
+            double x_i = current_pose[0] + ds * cos(heading_i);
+            double y_i = current_pose[1] + ds * sin(heading_i);
+            // CHECK this node is in the map or not
+            if ((x_i > map_xu) || (x_i < map_xl) || (y_i > map_yu) || (y_i < map_yl)){
+                continue;
+            }
+            // CHECK this node has been colosed or not
+            Eigen::Vector3d node_pose(x_i, y_i, heading_i); 
+            Eigen::Vector2i node_index = Pose2GridIndex(node_pose);
+            GridNodePtr node_i = GridNodeMap[node_index[0]][node_index[1]];
+            if (node_i->id == -1){
+                continue;
+            }
+            // CHECK is collision on this path or not
+            bool collision = false;
+            double dds = ds / ds_num_;
+            for (int j = 1; j < (ds_num_+1); ++j){
+                double heading_j = current_pose[2] + dds * j * tan(steering_angle_i) / vehicle_.wheelbase;
+                PI2PI(heading_i);
+                double x_j = current_pose[0] + dds * j * cos(heading_j);
+                double y_j = current_pose[1] + dds * j * cos(heading_j);
+                Eigen::Vector3d pose_j(x_j, y_j, heading_j);
+                collision = HybridAstarNode::CollisionCheck(pose_j);
+                if (collision){
+                    break;
+                }
+            }
+            if (!collision){
+                // if this node has been visited
+                if (node_i->id == 1){
+                    // compute g
+                    double node_i_g = ComputeG(current_pt, node_i);
+                    
+                    // change father node
+                    if (node_i_g < node_i->g_score){
+                        node_i->g_score = node_i_g;
+                        node_i->f_score = node_i->f_score - node_i->g_score + node_i_g;
+                        node_i->FatherNode = current_pt;
+                        node_i->pose = current_pose;
+                        node_i->gear = gear_i;
+                    }
+                }
+                // if this node is first visited
+                else{
+                    // add it into the openset
+                    node_i->id = 1;
+                    node_i->g_score = ComputeG(current_pt, node_i);
+                    node_i->f_score = node_i->g_score + ComputeH(current_pt, node_i);
+                    node_i->FatherNode = current_pt;
+                    node_i->pose = current_pose;
+                    node_i->gear = gear_i;
+                }
+            }
+        }
+    }
     
 
-//     return true;
-//     // expand node pose
+    return true;
     
-// }
+}
 
 // bool HybridAstarNode::SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose){
 //     return true;

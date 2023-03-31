@@ -9,6 +9,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <math.h>
 
 namespace l5player{
 namespace planner{
@@ -22,21 +23,21 @@ class HybridAstarNode : public rclcpp :: Node {
         ~HybridAstarNode(){};
         
         bool SearchPath(const Eigen::Vector3d & start_pt, 
-                    const Eigen::Vector3d & end_pt);
+                        const Eigen::Vector3d & end_pt);
         
         bool InitialMap();
         bool InitialHybrid();
         void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_pose_msg);
+        void PI2PI(double & theta);
     
     private:
         bool SetObstacles();
-        bool ExpandNode(GridNodePtr current_pt, 
-                        std::vector<GridNodePtr> & neighbor_pt,
-                        std::vector<double> & neighbor_costs);
+        bool ExpandNode(const GridNodePtr & current_pt);
 
-        double ComputeH(GridNodePtr node1, GridNodePtr node2);
+        double ComputeH(const GridNodePtr &node1, const GridNodePtr &node2);
+        double ComputeG(const GridNodePtr &node1, const GridNodePtr &node2);
 
-        bool CollisionCheck(const GridNodePtr currentPtr);
+        bool CollisionCheck(const Eigen::Vector3d & current_pose);
 
         bool GetResults(std::vector<Eigen::Vector3d> & hybridastar_resutls);
 
@@ -48,7 +49,6 @@ class HybridAstarNode : public rclcpp :: Node {
         int map_x_size_, map_y_size_, map_xy_size_;
         double map_xu, map_yu;
         double map_xl, map_yl;
-        uint8_t *map_value_;
         GridNodePtr **GridNodeMap;
 
         // hybrid settings
@@ -60,13 +60,24 @@ class HybridAstarNode : public rclcpp :: Node {
         double max_v_;
         double min_v_;
 
-        double delta_ds_; // expand 
+        // hybrid g score computation coefficient
+        double coeffi_heading;
+        double coeffi_gear;
+        double g_gear;
+
+        double delta_ds_; // expand length
+        int ds_num_; // split the expand length into pieces for collision check
+
+        // collision check
+        int circle_num;
+        double safe_dis;
         
         VehicleState vehicle_;
         Eigen::Vector3d goal_pose;
         Eigen::Vector3d start_pose;
         std::multimap<double, GridNodePtr> openset;
 
+        // world client
         rclcpp::SyncParametersClient::SharedPtr world_param_client_;
         rclcpp::SyncParametersClient::SharedPtr vehicle_param_client_;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr vehicle_pose_sub_;

@@ -32,9 +32,9 @@ def generate_launch_description():
             description='Prefix for node names'
         ),
         Node(
-            package='carla_l5player_mpc_controller',
-            executable='mpc_lateral_longitudinal',
-            name='mpc_lateral_longitudinal',
+            package='carla_l5player_hybridastar_planner',
+            executable='hybridastar_search',
+            name='hybridastar_search',
             parameters=[hybridastar_parameters_configuration],
             # remappings=None,
             # arguments=None,

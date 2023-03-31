@@ -1,9 +1,11 @@
 hybridastar_planner:
   ros__parameters:
+  ## hybrid settings
     steering_num: 5
     discrete_num: 10 # discrete the expansion length for collision check
     radius_flag: 5 # m, in this circle, try rs curve
     extend_num: 1 # this is a trick, extend the gear change point for a smooth path
+    cost_reverse: 1 # cost for reverse gear
 
   ## collision check
     circle_num: 2 # use the circl to fit the vehicle body

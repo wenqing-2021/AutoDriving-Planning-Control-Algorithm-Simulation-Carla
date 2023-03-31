@@ -16,6 +16,7 @@ struct GridNode{
     Eigen::Vector2i index;
 
     double g_score, f_score;
+    int gear;
     GridNodePtr FatherNode;
 
     std::multimap<double, GridNodePtr>::iterator node_mapit;
@@ -24,6 +25,7 @@ struct GridNode{
         id = 0;
         index = _index;
         pose = _pose;
+        gear = 0;
 
         g_score = inf;
         f_score = inf;
