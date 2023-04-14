@@ -9,9 +9,13 @@ HybridAstarNode::HybridAstarNode() : Node("hybridastar_search"){
         RCLCPP_WARN(this->get_logger(), "Failed to Initial map");
     }
 
-    if (!HybridAstarNode::InitialHybrid()){
+    if (!HybridAstarNode::InitialHybridAstar()){
         RCLCPP_WARN(this->get_logger(), "Failed to Get Hybrid parameters");
     }
+
+    if (!HybridAstarNode::InitialObstacle()){
+        RCLCPP_WARN(this->get_logger(), "Failed to Get Obstacle parameters");
+    }    
 
     vehicle_pose_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
                                     "/carla/ego_vehicle/odometry", 
@@ -49,12 +53,39 @@ bool HybridAstarNode::InitialMap(){
     return true;
 }
 
-bool HybridAstarNode::InitialHybrid(){
-    this->declare_parameter<double>("max_v", max_v_);
-    this->declare_parameter<double>("min_v", min_v_);
-    this->declare_parameter<double>("max_steering_angle", max_steering_angle_);
-    this->declare_parameter<double>("min_steering_angle", min_steering_angle_);
-    this->declare_parameter<double>("discrete_num", discrete_num_);
+bool HybridAstarNode::InitialObstacle(){
+
+    this->get_parameter<std::string>("obstacle_path", obstacle_path_);
+    std::cout << "obstacle_path is " << obstacle_path_ << " " << std::endl;
+
+    return true;
+}
+
+void HybridAstarNode::LoadObstacle(){
+    std::ifstream infile(obstacle_path_, std::ios::in);
+    assert(infile.is_open());
+    std::string line;
+    
+}
+
+bool HybridAstarNode::InitialHybridAstar(){
+    // vehicle parameter
+    this->get_parameter<double>("max_v", max_v_);
+    this->get_parameter<double>("min_v", min_v_);
+    this->get_parameter<double>("max_steering_angle", max_steering_angle_);
+    this->get_parameter<double>("min_steering_angle", min_steering_angle_);
+
+    // hybrid parameter
+    this->get_parameter<int>("discrete_num", ds_num_);
+    this->get_parameter<int>("steering_num", steering_num_);
+    this->get_parameter<double>("radius_flag", radius_flag_);
+    this->get_parameter<double>("coeffi_heading", coeffi_heading_);
+    this->get_parameter<double>("coeffi_gear_", coeffi_gear_);
+    this->get_parameter<double>("g_gear_", g_gear_);
+
+    // safe check
+    this->get_parameter<int>("circle_num", circle_num_);
+    this->get_parameter<double>("safe_dis", safe_dis_);
 
     return true;
 }
@@ -87,15 +118,14 @@ void HybridAstarNode::PI2PI(double & theta){
     }
 }
 
-Eigen::Vector3d HybridAstarNode::GridIndex2Pose(const Eigen::Vector2i & grid_index){
+Eigen::Vector2d HybridAstarNode::GridIndex2Posi(const Eigen::Vector2i & grid_index){
     int index_x = grid_index[0];
     int index_y = grid_index[1];
 
-    Eigen::Vector3d pose(index_x * map_resolution_ + map_xl,
-                         index_y * map_resolution_ + map_yl,
-                         0.0);
+    Eigen::Vector2d posi(index_x * map_resolution_ + map_xl,
+                         index_y * map_resolution_ + map_yl);
 
-    return pose;
+    return posi;
 }
 
 Eigen::Vector2i HybridAstarNode::Pose2GridIndex(const Eigen::Vector3d & vehicle_pose){
@@ -113,14 +143,14 @@ Eigen::Vector2i HybridAstarNode::Pose2GridIndex(const Eigen::Vector3d & vehicle_
 bool HybridAstarNode::CollisionCheck(const Eigen::Vector3d & current_pose){
     bool collision = false;
 
-    Eigen::MatrixXd circle_position(circle_num, 2);
+    Eigen::MatrixXd circle_position(circle_num_, 2);
 
     // we use fitted circles for collision check
-    double radius = 0.5 * sqrt(pow(vehicle_.length / circle_num, 2) + pow(vehicle_.width, 2));
-    for (int i = 0; i < circle_num; ++i){
-        double coefficient = (vehicle_.length - vehicle_.wheelbase) / 2 + vehicle_.wheelbase + vehicle_.length / circle_num * (0.5 - i);
-        circle_position[i,0] = vehicle_.x + coefficient * cos(current_pose[2]);
-        circle_position[i,1] = vehicle_.y + coefficient * sin(current_pose[2]);
+    double radius = 0.5 * sqrt(pow(vehicle_.length / circle_num_, 2) + pow(vehicle_.width, 2));
+    for (int i = 0; i < circle_num_; ++i){
+        double coefficient = (vehicle_.length - vehicle_.wheelbase) / 2 + vehicle_.wheelbase + vehicle_.length / circle_num_ * (0.5 - i);
+        circle_position(i,0) = vehicle_.x + coefficient * cos(current_pose[2]);
+        circle_position(i,1) = vehicle_.y + coefficient * sin(current_pose[2]);
     }
 
     return collision;
@@ -146,9 +176,9 @@ double HybridAstarNode::ComputeG(const GridNodePtr &node1, const GridNodePtr &no
     Eigen::Vector3d pose_1 = node1->pose;
     Eigen::Vector3d pose_2 = node2->pose;
 
-    cost_heading = coeffi_heading * abs(pose_2[2] - pose_1[1]);
+    cost_heading = coeffi_heading_ * abs(pose_2[2] - pose_1[1]);
     if (node2->gear != node1->gear){
-        cost_gear = coeffi_gear * g_gear;
+        cost_gear = coeffi_gear_ * g_gear_;
     }
     else{
         cost_gear = 0.0;
@@ -163,11 +193,11 @@ double HybridAstarNode::ComputeG(const GridNodePtr &node1, const GridNodePtr &no
 bool HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
     Eigen::Vector3d current_pose = current_pt->pose;
     int gear[] = {1, -1};
-    double delta_angle = (max_steering_angle_ - min_steering_angle_) / (discrete_num_ - 1);
+    double delta_angle = (max_steering_angle_ - min_steering_angle_) / (steering_num_ - 1);
     // expand node
     for (auto gear_i : gear){
         double ds = delta_ds_ * gear_i;
-        for (int i = 0; i < discrete_num_; ++i){
+        for (int i = 0; i < steering_num_; ++i){
             double steering_angle_i = min_steering_angle_ + i * delta_angle;
             double heading_i = current_pose[2] + ds * tan(steering_angle_i) / vehicle_.wheelbase;
             PI2PI(heading_i);
@@ -240,6 +270,7 @@ bool HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
 int main(int argc, char **argv){
     rclcpp::init(argc, argv);
     auto hybridastar_node = std::make_shared<HybridAstarNode>();
+    std::cout << "initial node" << std::endl; 
     rclcpp::spin(hybridastar_node);
     rclcpp::shutdown();
     return 0;

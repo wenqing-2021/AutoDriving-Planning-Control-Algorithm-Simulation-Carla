@@ -26,7 +26,9 @@ class HybridAstarNode : public rclcpp :: Node {
                         const Eigen::Vector3d & end_pt);
         
         bool InitialMap();
-        bool InitialHybrid();
+        bool InitialHybridAstar();
+        bool InitialObstacle();
+        void LoadObstacle();
         void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_pose_msg);
         void PI2PI(double & theta);
     
@@ -41,7 +43,7 @@ class HybridAstarNode : public rclcpp :: Node {
 
         bool GetResults(std::vector<Eigen::Vector3d> & hybridastar_resutls);
 
-        Eigen::Vector3d GridIndex2Pose(const Eigen::Vector2i & grid_index);
+        Eigen::Vector2d GridIndex2Posi(const Eigen::Vector2i & grid_index);
         Eigen::Vector2i Pose2GridIndex(const Eigen::Vector3d & vehicle_pose);
         
         // map configuration
@@ -51,26 +53,29 @@ class HybridAstarNode : public rclcpp :: Node {
         double map_xl, map_yl;
         GridNodePtr **GridNodeMap;
 
-        // hybrid settings
+        // vehicle settings
         bool reach_ = false; // if reach the flag, change to true
         bool start_ = false; // if get the start position, change to true. if reach the goal ,change to false 
         double max_steering_angle_;
         double min_steering_angle_;
-        int discrete_num_; // 
         double max_v_;
         double min_v_;
 
         // hybrid g score computation coefficient
-        double coeffi_heading;
-        double coeffi_gear;
-        double g_gear;
-
-        double delta_ds_; // expand length
+        int steering_num_; // discrete the steering angle
+        double delta_ds_; // expand length = sqrt(2) * map_resolution_
         int ds_num_; // split the expand length into pieces for collision check
+        double coeffi_heading_;
+        double coeffi_gear_;
+        double g_gear_;
+        double radius_flag_;
 
         // collision check
-        int circle_num;
-        double safe_dis;
+        int circle_num_;
+        double safe_dis_;
+
+        // obstacle path
+        std::string obstacle_path_;
         
         VehicleState vehicle_;
         Eigen::Vector3d goal_pose;

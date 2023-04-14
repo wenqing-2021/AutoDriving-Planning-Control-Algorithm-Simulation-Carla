@@ -1,16 +1,25 @@
 hybridastar_planner:
   ros__parameters:
+  ## obstacle position
+    obstacle_path: "src/l5player_planner/carla_l5player_hybridastar_planner/data/obstacle_data.csv"
   ## hybrid settings
     steering_num: 5
     discrete_num: 10 # discrete the expansion length for collision check
-    radius_flag: 5 # m, in this circle, try rs curve
+    radius_flag: 5.0 # m, in this circle, try rs curve
     extend_num: 1 # this is a trick, extend the gear change point for a smooth path
-    cost_reverse: 1 # cost for reverse gear
+    ## coefficient
+    coeffi_heading: 0.5 # cost for heading change
+    coeffi_gear: 1.0 # coeffi for g_gear
+    g_gear: 1.5 # cost for the change gear
 
   ## collision check
     circle_num: 2 # use the circl to fit the vehicle body
-    safe_radius: 2 # m safe distance for collision check
+    safe_dis: 2.5 # m safe distance for collision check
 
   ## vehicle parameters
     max_steering_angle: 0.75 # rad 
     max_v: 2 # m/s 
+    min_v: -2 
+    min_steering_angle: -0.75
+  
+  ## map parameters see hybrid inital world.py
