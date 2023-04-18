@@ -22,8 +22,8 @@ class HybridAstarNode : public rclcpp :: Node {
         HybridAstarNode();
         ~HybridAstarNode(){};
         
-        bool SearchPath(const Eigen::Vector3d & start_pt, 
-                        const Eigen::Vector3d & end_pt);
+        // bool SearchPath(const Eigen::Vector3d & start_pt, 
+        //                 const Eigen::Vector3d & end_pt);
         
         bool InitialMap();
         bool InitialHybridAstar();
@@ -33,7 +33,7 @@ class HybridAstarNode : public rclcpp :: Node {
         void PI2PI(double & theta);
     
     private:
-        bool SetObstacles();
+        // bool SetObstacles();
         bool ExpandNode(const GridNodePtr & current_pt);
 
         double ComputeH(const GridNodePtr &node1, const GridNodePtr &node2);
@@ -41,7 +41,7 @@ class HybridAstarNode : public rclcpp :: Node {
 
         bool CollisionCheck(const Eigen::Vector3d & current_pose);
 
-        bool GetResults(std::vector<Eigen::Vector3d> & hybridastar_resutls);
+        // bool GetResults(std::vector<Eigen::Vector3d> & hybridastar_resutls);
 
         Eigen::Vector2d GridIndex2Posi(const Eigen::Vector2i & grid_index);
         Eigen::Vector2i Pose2GridIndex(const Eigen::Vector3d & vehicle_pose);
@@ -84,7 +84,6 @@ class HybridAstarNode : public rclcpp :: Node {
 
         // world client
         rclcpp::SyncParametersClient::SharedPtr world_param_client_;
-        rclcpp::SyncParametersClient::SharedPtr vehicle_param_client_;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr vehicle_pose_sub_;
 };
 

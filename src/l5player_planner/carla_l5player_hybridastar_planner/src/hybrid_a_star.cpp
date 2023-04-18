@@ -25,8 +25,9 @@ HybridAstarNode::HybridAstarNode() : Node("hybridastar_search"){
 }
 
 bool HybridAstarNode::InitialMap(){
+    world_param_client_ = std::make_shared<rclcpp::SyncParametersClient>(this, "hybridastar_initial_wolrd");
     while (!world_param_client_->wait_for_service(1s)){
-        RCLCPP_WARN(this->get_logger(), "please open carla town01...");
+        RCLCPP_INFO(this->get_logger(), "please connect town01...");
     }
     map_xu = world_param_client_->get_parameter<double>("map_max_x");
     map_yu = world_param_client_->get_parameter<double>("map_max_y");
@@ -34,13 +35,21 @@ bool HybridAstarNode::InitialMap(){
     map_yl = world_param_client_->get_parameter<double>("map_min_y");
     map_resolution_ = world_param_client_->get_parameter<double>("resolution");
 
+    RCLCPP_INFO(this->get_logger(), "map_max_x %f", this->map_xu);
+    RCLCPP_INFO(this->get_logger(), "map_max_y %f", this->map_yu);
+    RCLCPP_INFO(this->get_logger(), "map_min_x %f", this->map_xl);
+    RCLCPP_INFO(this->get_logger(), "map_min_y %f", this->map_yl);
+    RCLCPP_INFO(this->get_logger(), "resolution %f", this->map_resolution_);
+    std::cout << "get map information" << std::endl;
+
     delta_ds_ = std::sqrt(2) * map_resolution_;
 
     map_x_size_ = (int)((map_xu - map_xl) / map_resolution_);
     map_y_size_ = (int)((map_yu - map_yl) / map_resolution_);
     map_xy_size_ = map_x_size_ * map_y_size_;
 
-    GridNodeMap = new GridNodePtr * [map_x_size_]; // 二级指针
+    GridNodeMap = new GridNodePtr* [map_x_size_]; // 二级指针
+    std::cout << "start initial map" << std::endl;
     for (int i = 0; i < map_x_size_; i++){
         GridNodeMap[i] = new GridNodePtr [map_y_size_];
         for (int j = 0; j < map_y_size_; j++){
@@ -50,14 +59,15 @@ bool HybridAstarNode::InitialMap(){
         }
     }
 
+    RCLCPP_INFO(this->get_logger(), "Successfully get Map information");
     return true;
 }
 
 bool HybridAstarNode::InitialObstacle(){
-
+    this->declare_parameter<std::string>("obstacle_path", "obstacle_inital_path");
     this->get_parameter<std::string>("obstacle_path", obstacle_path_);
-    std::cout << "obstacle_path is " << obstacle_path_ << " " << std::endl;
-
+    std::cout << "obstacle_path: " << obstacle_path_ << std::endl;
+    RCLCPP_INFO(this->get_logger(), "Successfully get Obstacles position");
     return true;
 }
 
@@ -69,24 +79,52 @@ void HybridAstarNode::LoadObstacle(){
 }
 
 bool HybridAstarNode::InitialHybridAstar(){
+    // declare parameter
+    this->declare_parameter<double>("max_v", max_v_);
+    this->declare_parameter<double>("min_v", min_v_);
+    this->declare_parameter<double>("max_steering_angle", max_steering_angle_);
+    this->declare_parameter<double>("min_steering_angle", min_steering_angle_);
+    this->declare_parameter<int>("discrete_num", ds_num_);
+    this->declare_parameter<int>("steering_num", steering_num_);
+    this->declare_parameter<double>("radius_flag", radius_flag_);
+    this->declare_parameter<double>("coeffi_heading", coeffi_heading_);
+    this->declare_parameter<double>("coeffi_gear_", coeffi_gear_);
+    this->declare_parameter<double>("g_gear_", g_gear_);
+    this->declare_parameter<int>("circle_num", circle_num_);
+    this->declare_parameter<double>("safe_dis", safe_dis_);
+
     // vehicle parameter
-    this->get_parameter<double>("max_v", max_v_);
-    this->get_parameter<double>("min_v", min_v_);
-    this->get_parameter<double>("max_steering_angle", max_steering_angle_);
-    this->get_parameter<double>("min_steering_angle", min_steering_angle_);
+    this->get_parameter<double>("max_v", this->max_v_);
+    this->get_parameter<double>("min_v", this->min_v_);
+    this->get_parameter<double>("max_steering_angle", this->max_steering_angle_);
+    this->get_parameter<double>("min_steering_angle", this->min_steering_angle_);
 
     // hybrid parameter
-    this->get_parameter<int>("discrete_num", ds_num_);
-    this->get_parameter<int>("steering_num", steering_num_);
-    this->get_parameter<double>("radius_flag", radius_flag_);
-    this->get_parameter<double>("coeffi_heading", coeffi_heading_);
-    this->get_parameter<double>("coeffi_gear_", coeffi_gear_);
-    this->get_parameter<double>("g_gear_", g_gear_);
+    this->get_parameter<int>("discrete_num", this->ds_num_);
+    this->get_parameter<int>("steering_num", this->steering_num_);
+    this->get_parameter<double>("radius_flag", this->radius_flag_);
+    this->get_parameter<double>("coeffi_heading", this->coeffi_heading_);
+    this->get_parameter<double>("coeffi_gear_", this->coeffi_gear_);
+    this->get_parameter<double>("g_gear_", this->g_gear_);
 
     // safe check
-    this->get_parameter<int>("circle_num", circle_num_);
-    this->get_parameter<double>("safe_dis", safe_dis_);
+    this->get_parameter<int>("circle_num", this->circle_num_);
+    this->get_parameter<double>("safe_dis", this->safe_dis_);
 
+    RCLCPP_INFO(this->get_logger(), "max_v %f", max_v_);
+    RCLCPP_INFO(this->get_logger(), "min_v %f", min_v_);
+    RCLCPP_INFO(this->get_logger(), "max_steering_angle %f", max_steering_angle_);
+    RCLCPP_INFO(this->get_logger(), "min_steering_angle %f", min_steering_angle_);
+    RCLCPP_INFO(this->get_logger(), "discrete_num ", ds_num_);
+    RCLCPP_INFO(this->get_logger(), "steering_num ", steering_num_);
+    RCLCPP_INFO(this->get_logger(), "radius_flag %f", radius_flag_);
+    RCLCPP_INFO(this->get_logger(), "coeffi_heading %f", coeffi_heading_);
+    RCLCPP_INFO(this->get_logger(), "coeffi_gear_ %f", coeffi_gear_);
+    RCLCPP_INFO(this->get_logger(), "g_gear_ %f", g_gear_);
+    RCLCPP_INFO(this->get_logger(), "circle_num ", circle_num_);
+    RCLCPP_INFO(this->get_logger(), "safe_dis %f", safe_dis_);
+
+    RCLCPP_INFO(this->get_logger(), "Successfully get Hybrid Parameter");
     return true;
 }
 
@@ -270,7 +308,6 @@ bool HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
 int main(int argc, char **argv){
     rclcpp::init(argc, argv);
     auto hybridastar_node = std::make_shared<HybridAstarNode>();
-    std::cout << "initial node" << std::endl; 
     rclcpp::spin(hybridastar_node);
     rclcpp::shutdown();
     return 0;

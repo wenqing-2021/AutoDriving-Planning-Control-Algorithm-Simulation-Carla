@@ -1,4 +1,4 @@
-hybridastar_planner:
+hybridastar_search:
   ros__parameters:
   ## obstacle position
     obstacle_path: "src/l5player_planner/carla_l5player_hybridastar_planner/data/obstacle_data.csv"
@@ -18,8 +18,8 @@ hybridastar_planner:
 
   ## vehicle parameters
     max_steering_angle: 0.75 # rad 
-    max_v: 2 # m/s 
-    min_v: -2 
+    max_v: 2.0 # m/s 
+    min_v: -2.0 
     min_steering_angle: -0.75
   
   ## map parameters see hybrid inital world.py

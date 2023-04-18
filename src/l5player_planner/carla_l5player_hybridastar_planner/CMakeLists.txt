@@ -47,7 +47,7 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# Install launch files.
+# Install launch/config files.
 install(DIRECTORY
 launch
 config
