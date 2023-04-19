@@ -25,10 +25,10 @@ find_package(Eigen3 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
 add_executable(hybridastar_visual 
-               src/visualization.cpp)
+               src/hybridAstar_visualization.cpp)
 
 add_executable(hybridastar_search 
-               src/hybrid_a_star.cpp)
+               src/hybridAstar_search.cpp)
 
 target_include_directories(hybridastar_visual PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
