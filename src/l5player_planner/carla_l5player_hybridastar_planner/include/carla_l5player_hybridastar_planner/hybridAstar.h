@@ -3,6 +3,7 @@
 
 #include "carla_l5player_hybridastar_planner/node3d.h"
 #include "carla_l5player_hybridastar_planner/common.h"
+#include "carla_l5player_hybridastar_planner/util_tool.h"
 
 #include <rclcpp/rclcpp.hpp>
 #include <Eigen/Eigen>
@@ -52,7 +53,8 @@ class HybridAstarNode : public rclcpp :: Node {
         double map_xu, map_yu;
         double map_xl, map_yl;
         GridNodePtr **GridNodeMap;
-        std::vector<std::vector<double>> obstacle_position;
+        uint8_t * map_data; // 0 --> no obstacle, 1 --> has obstacle
+        std::vector<std::pair<double, double>> obstacle_position;
 
         // vehicle settings
         bool reach_ = false; // if reach the flag, change to true

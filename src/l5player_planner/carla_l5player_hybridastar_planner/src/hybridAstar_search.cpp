@@ -48,6 +48,9 @@ bool HybridAstarNode::InitialMap(){
     map_y_size_ = (int)((map_yu - map_yl) / map_resolution_);
     map_xy_size_ = map_x_size_ * map_y_size_;
 
+    map_data = new uint8_t[map_xy_size_];
+    memset(map_data, 0, map_xy_size_ * sizeof(uint8_t));
+
     GridNodeMap = new GridNodePtr* [map_x_size_]; // 二级指针
     std::cout << "start initial map" << std::endl;
     for (int i = 0; i < map_x_size_; i++){
@@ -81,12 +84,23 @@ void HybridAstarNode::LoadObstacle(){
         if (line[0] == '#'){
             continue;
         }
-        
-        // while (getline())
-        std::vector<double> obs_position;
-        // obs_position.push_back()
+        std::stringstream ss(line);
+        std::string obstacle_pos_str;
+        std::vector<std::string> tmp_position_str;
+        // read data in each row
+        int i = 0;
+        while (getline(ss, obstacle_pos_str, ',')){
+            tmp_position_str.push_back(obstacle_pos_str);
+            i++;
+            if ( i % 2 == 0){
+                // store the obstacle position in the vector
+                double pt_x = std::atof(tmp_position_str[i-2].c_str());
+                double pt_y = std::atof(tmp_position_str[i-1].c_str());
+                obstacle_position.push_back(std::make_pair(pt_x, pt_y));
+            }
+        }
     }
-    
+    infile.close();
 }
 
 bool HybridAstarNode::InitialHybridAstar(){
