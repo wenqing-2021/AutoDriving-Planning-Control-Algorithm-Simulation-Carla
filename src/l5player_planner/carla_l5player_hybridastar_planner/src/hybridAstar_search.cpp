@@ -21,6 +21,12 @@ HybridAstarNode::HybridAstarNode() : Node("hybridastar_search"){
                                     "/carla/ego_vehicle/odometry", 
                                     10, 
                                     std::bind(&HybridAstarNode::VehiclePoseCallback, this, std::placeholders::_1));
+    
+    obstacle_position_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/hybridastar/search/obstacl_pos_pub", 10);
+    obstacle_vertex_num_pub_ = this->create_publisher<std_msgs::msg::Int32MultiArray>("/hybridastar/search/obstacl_vertex_num_pub", 10);
+
+    obstacle_pub_timer_ = this->create_wall_timer(
+        10ms, std::bind(&HybridAstarNode::PubObstacleCallBack, this));
 
 }
 
@@ -89,7 +95,13 @@ void HybridAstarNode::LoadObstacle(){
         std::vector<std::string> tmp_position_str;
         // read data in each row
         int i = 0;
+        bool get_vertex_num = false;
         while (getline(ss, obstacle_pos_str, ',')){
+            if (!get_vertex_num){
+                obstalce_vertex_num.push_back(std::atoi(obstacle_pos_str.c_str()));
+                get_vertex_num = true;
+                continue;
+            }
             tmp_position_str.push_back(obstacle_pos_str);
             i++;
             if ( i % 2 == 0){
@@ -101,6 +113,20 @@ void HybridAstarNode::LoadObstacle(){
         }
     }
     infile.close();
+}
+
+void HybridAstarNode::PubObstacleCallBack(){
+    std_msgs::msg::Float64MultiArray obstacle_position_array;
+    std_msgs::msg::Int32MultiArray obstacle_vertex_num_array;
+    for (auto point : obstacle_position){
+        obstacle_position_array.data.push_back(point.first);
+        obstacle_position_array.data.push_back(point.second);
+    }
+    for (auto vertex_num : obstalce_vertex_num){
+        obstacle_vertex_num_array.data.push_back(vertex_num);
+    }
+    obstacle_position_pub_->publish(obstacle_position_array);
+    obstacle_vertex_num_pub_->publish(obstacle_vertex_num_array);
 }
 
 bool HybridAstarNode::InitialHybridAstar(){

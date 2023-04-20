@@ -6,6 +6,8 @@
 #include "carla_l5player_hybridastar_planner/util_tool.h"
 
 #include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/float64_multi_array.hpp>
+#include <std_msgs/msg/int32_multi_array.hpp>
 #include <Eigen/Eigen>
 #include <string>
 #include <algorithm>
@@ -46,6 +48,9 @@ class HybridAstarNode : public rclcpp :: Node {
 
         Eigen::Vector2d GridIndex2Posi(const Eigen::Vector2i & grid_index);
         Eigen::Vector2i Pose2GridIndex(const Eigen::Vector3d & vehicle_pose);
+
+        // pub obstacle position
+        void PubObstacleCallBack();
         
         // map configuration
         double map_resolution_;
@@ -55,6 +60,7 @@ class HybridAstarNode : public rclcpp :: Node {
         GridNodePtr **GridNodeMap;
         uint8_t * map_data; // 0 --> no obstacle, 1 --> has obstacle
         std::vector<std::pair<double, double>> obstacle_position;
+        std::vector<int> obstalce_vertex_num;
 
         // vehicle settings
         bool reach_ = false; // if reach the flag, change to true
@@ -88,6 +94,11 @@ class HybridAstarNode : public rclcpp :: Node {
         // world client
         rclcpp::SyncParametersClient::SharedPtr world_param_client_;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr vehicle_pose_sub_;
+
+        // publisher
+        rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr obstacle_position_pub_;
+        rclcpp::Publisher<std_msgs::msg::Int32MultiArray>::SharedPtr obstacle_vertex_num_pub_;
+        rclcpp::TimerBase::SharedPtr obstacle_pub_timer_;
 };
 
 } // planner

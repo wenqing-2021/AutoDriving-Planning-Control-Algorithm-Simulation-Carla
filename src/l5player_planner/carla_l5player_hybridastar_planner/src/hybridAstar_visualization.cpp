@@ -16,16 +16,30 @@ VisualNode::VisualNode() : Node("hybridastar_visual"){
                                     "/carla/ego_vehicle/odometry", 
                                     10, 
                                     std::bind(&VisualNode::VehiclePoseCallback, this, std::placeholders::_1));
+    
+    obstacle_vertex_num_sub_ = this->create_subscription<std_msgs::msg::Int32MultiArray>(
+                                    "/hybridastar/search/obstacl_vertex_num_pub", 
+                                    10,
+                                    std::bind(&VisualNode::ObsVertexNumCallback, this, std::placeholders::_1));
+    
+    obstacle_position_sub_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
+                                    "/hybridastar/search/obstacl_pos_pub", 
+                                    10, 
+                                    std::bind(&VisualNode::ObstaclePosCallback, this, std::placeholders::_1));
 
     visualpath_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/path_pub", 10);
     visualboundary_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/boundary_pub", 10);
     visualvehicle_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/vehicle_pub", 10);
+    visualobstacle_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/obstacle_pub", 10);
 
     boundary_timer_ = this->create_wall_timer(
         500ms, std::bind(&VisualNode::VisualBoundaryCallback, this));
     
     vehicle_timer_ = this->create_wall_timer(
         10ms, std::bind(&VisualNode::VisualVechicleCallback, this));
+
+    obstacle_timer_ = this->create_wall_timer(
+        10ms, std::bind(&VisualNode::VisualObstacleCallback, this));
 }
 
 bool VisualNode::GetBoundaryVertex(){
@@ -121,12 +135,41 @@ void VisualNode::VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_
     }
 }
 
+void VisualNode::ObstaclePosCallback(std_msgs::msg::Float64MultiArray::SharedPtr obstacle_position_msgs){
+    std::vector<double> position_data = obstacle_position_msgs->data;
+    int start = 0;
+    std::vector<geometry_msgs::msg::Point> obstacle_points_vector;
+    for (auto vertex_num : vertex_num_vector){
+        int end = start + vertex_num;
+        for (int index = start; index < end; index++){
+            geometry_msgs::msg::Point point_i;
+            point_i.x = position_data[index*2];
+            point_i.y = position_data[index*2+1];
+            obstacle_points_vector.push_back(point_i);
+        }
+        start = end;
+        obstacle_lines_ = GetPolygon(obstacle_points_vector);
+        obstacle_lines_vector.push_back(obstacle_lines_);
+        obstacle_points_vector.clear();
+    }
+}
+
+void VisualNode::ObsVertexNumCallback(std_msgs::msg::Int32MultiArray::SharedPtr obstacle_vertex_num_msgs){
+    vertex_num_vector = obstacle_vertex_num_msgs->data;
+}
+
 void VisualNode::VisualBoundaryCallback(){
     visualboundary_pub_->publish(boundary_lines_);
 }
 
 void VisualNode::VisualVechicleCallback(){
     visualvehicle_pub_->publish(vehicle_lines_);
+}
+
+void VisualNode::VisualObstacleCallback(){
+    for (auto obstacle_line : obstacle_lines_vector){
+        visualobstacle_pub_->publish(obstacle_line);
+    }
 }
 
 MarkerArray VisualNode::GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points){

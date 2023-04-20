@@ -1,8 +1,6 @@
 #include "carla_l5player_hybridastar_planner/util_tool.h"
 
-using namespace std;
-
-pair<double, double> GetLinearFunc(const pair<double, double>& vertex_1, const pair<double, double>& vertex_2){
+std::pair<double, double> GetLinearFunc(const std::pair<double, double>& vertex_1, const std::pair<double, double>& vertex_2){
     double k = (vertex_2.second - vertex_1.second) / (vertex_1.first - vertex_2.first);
     double b = vertex_2.second - k * vertex_2.first;
     return std::make_pair(k, b);
@@ -12,9 +10,9 @@ pair<double, double> GetLinearFunc(const pair<double, double>& vertex_1, const p
  * @description: generate rotation matrix for two points. The maorigin is the first point.
  * @return {*} the rotation matrix, shape is (2, 2)
  */
-Eigen::Matrix2d GetRotationMatrix(const pair<double, double>& vertex_1, const pair<double, double>& vertex_2){
-    pair<double, double> vector_1(1.0, 0.0);
-    pair<double, double> vector_2(vertex_2.first - vertex_1.first,
+Eigen::Matrix2d GetRotationMatrix(const std::pair<double, double>& vertex_1, const std::pair<double, double>& vertex_2){
+    std::pair<double, double> vector_1(1.0, 0.0);
+    std::pair<double, double> vector_2(vertex_2.first - vertex_1.first,
                                   vertex_2.second - vertex_1.second);
     double rotation_angle = GetVectorAngle(vector_1, vector_2);
     Eigen::Matrix2d rotation_matrix;
