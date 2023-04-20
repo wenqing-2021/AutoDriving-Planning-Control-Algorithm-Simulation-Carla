@@ -14,6 +14,7 @@
 #include <chrono>
 #include <string>
 #include <math.h>
+#include <numeric>
 
 #include "carla_l5player_hybridastar_planner/node3d.h"
 #include "carla_l5player_hybridastar_planner/common.h"

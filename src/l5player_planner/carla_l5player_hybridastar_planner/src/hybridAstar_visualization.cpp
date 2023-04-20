@@ -149,6 +149,11 @@ void VisualNode::ObstaclePosCallback(std_msgs::msg::Float64MultiArray::SharedPtr
         }
         start = end;
         obstacle_lines_ = GetPolygon(obstacle_points_vector);
+        int index = 0;
+        for (auto& each_line : obstacle_lines_.markers){
+            each_line.id = start - index;
+            index++;
+        }
         obstacle_lines_vector.push_back(obstacle_lines_);
         obstacle_points_vector.clear();
     }
@@ -167,9 +172,13 @@ void VisualNode::VisualVechicleCallback(){
 }
 
 void VisualNode::VisualObstacleCallback(){
+    visualization_msgs::msg::MarkerArray lines_pub;
     for (auto obstacle_line : obstacle_lines_vector){
-        visualobstacle_pub_->publish(obstacle_line);
+        for (auto line_i : obstacle_line.markers){
+            lines_pub.markers.push_back(line_i);
+        }
     }
+    visualobstacle_pub_->publish(lines_pub);
 }
 
 MarkerArray VisualNode::GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points){
