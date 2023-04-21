@@ -32,6 +32,7 @@ class HybridAstarNode : public rclcpp :: Node {
         bool InitialHybridAstar();
         bool InitialObstacle();
         void LoadObstacle();
+        void SetObstacleData(const std::vector<std::pair<double, double>>& obstacles_vector);
         void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_pose_msg);
         void PI2PI(double & theta);
     

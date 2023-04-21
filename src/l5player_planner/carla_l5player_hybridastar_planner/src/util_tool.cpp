@@ -13,7 +13,7 @@ std::pair<double, double> GetLinearFunc(const std::pair<double, double>& vertex_
 Eigen::Matrix2d GetRotationMatrix(const std::pair<double, double>& vertex_1, const std::pair<double, double>& vertex_2){
     std::pair<double, double> vector_1(1.0, 0.0);
     std::pair<double, double> vector_2(vertex_2.first - vertex_1.first,
-                                  vertex_2.second - vertex_1.second);
+                                       vertex_2.second - vertex_1.second);
     double rotation_angle = GetVectorAngle(vector_1, vector_2);
     Eigen::Matrix2d rotation_matrix;
     rotation_matrix.row(0) << cos(rotation_angle), -sin(rotation_angle);

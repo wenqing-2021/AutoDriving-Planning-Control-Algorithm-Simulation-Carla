@@ -58,7 +58,7 @@ bool HybridAstarNode::InitialMap(){
     memset(map_data, 0, map_xy_size_ * sizeof(uint8_t));
 
     GridNodeMap = new GridNodePtr* [map_x_size_]; // 二级指针
-    std::cout << "start initial map" << std::endl;
+    RCLCPP_INFO(this->get_logger(), "Start initial map ....");
     for (int i = 0; i < map_x_size_; i++){
         GridNodeMap[i] = new GridNodePtr [map_y_size_];
         for (int j = 0; j < map_y_size_; j++){
@@ -68,7 +68,7 @@ bool HybridAstarNode::InitialMap(){
         }
     }
 
-    RCLCPP_INFO(this->get_logger(), "Successfully get Map information");
+    RCLCPP_INFO(this->get_logger(), "Successfully initial Map done");
     return true;
 }
 
@@ -76,9 +76,10 @@ bool HybridAstarNode::InitialObstacle(){
     this->declare_parameter<std::string>("obstacle_path", "obstacle_inital_path");
     this->get_parameter<std::string>("obstacle_path", obstacle_path_);
     std::cout << "obstacle_path: " << obstacle_path_ << std::endl;
+    RCLCPP_INFO(this->get_logger(), "Start initial Obstacles position ... ");
     LoadObstacle();
 
-    RCLCPP_INFO(this->get_logger(), "Successfully get Obstacles position");
+    RCLCPP_INFO(this->get_logger(), "Successfully get Obstacles position done");
     return true;
 }
 
@@ -86,6 +87,7 @@ void HybridAstarNode::LoadObstacle(){
     std::ifstream infile(obstacle_path_, std::ios::in);
     assert(infile.is_open());
     std::string line;
+    std::vector<std::pair<double, double>> obstacle_i_vector;
     while (getline(infile, line)){
         if (line[0] == '#'){
             continue;
@@ -93,11 +95,13 @@ void HybridAstarNode::LoadObstacle(){
         std::stringstream ss(line);
         std::string obstacle_pos_str;
         std::vector<std::string> tmp_position_str;
+        obstacle_i_vector.clear();
         // read data in each row
         int i = 0;
         bool get_vertex_num = false;
         while (getline(ss, obstacle_pos_str, ',')){
             if (!get_vertex_num){
+                // store the vertex number of each obstacle
                 obstalce_vertex_num.push_back(std::atoi(obstacle_pos_str.c_str()));
                 get_vertex_num = true;
                 continue;
@@ -109,10 +113,62 @@ void HybridAstarNode::LoadObstacle(){
                 double pt_x = std::atof(tmp_position_str[i-2].c_str());
                 double pt_y = std::atof(tmp_position_str[i-1].c_str());
                 obstacle_position.push_back(std::make_pair(pt_x, pt_y));
+                obstacle_i_vector.push_back(std::make_pair(pt_x, pt_y));
             }
         }
+        SetObstacleData(obstacle_i_vector);
     }
     infile.close();
+}
+
+/**
+ * @description: set the obstacle boundary line data = 1
+ * @return {*}
+ */
+void HybridAstarNode::SetObstacleData(const std::vector<std::pair<double, double>>& obstacles_vector){
+    std::pair<double, double> vertex_1;
+    std::pair<double, double> vertex_2;
+    Eigen::MatrixXd vertex_1_matrix(2, 1);
+    Eigen::MatrixXd vertex_2_matrix(2, 1);
+    Eigen::MatrixXd new_vertex_1(2, 1);
+    new_vertex_1 << 0.0, 0.0;
+    Eigen::MatrixXd new_vertex_2(2, 1);
+    for (int i = 0; i < int(obstacles_vector.size()); ++i){
+        if (i == int(obstacles_vector.size() - 1)){
+            vertex_1 = obstacles_vector[-1];
+            vertex_2 = obstacles_vector[0];
+        }
+        else{
+            vertex_1 = obstacles_vector[i+1];
+            vertex_2 = obstacles_vector[i];
+        }
+        // record the obstacle point position
+        vertex_1_matrix << vertex_1.first, vertex_1.second;
+        vertex_2_matrix << vertex_2.first, vertex_2.second;
+        // get the rotation matrix
+        Eigen::Matrix2d rotation_martrix = GetRotationMatrix(vertex_1, vertex_2);
+        new_vertex_2 = rotation_martrix * (vertex_2_matrix - vertex_1_matrix);
+        int interval_num = int(new_vertex_2(0, 0) / map_resolution_);
+        // add interval point to approximate the boundary of obstacles
+        // std::cout << "interval_num" << interval_num << std::endl;
+        for (int j = 0; j < interval_num + 1; ++j){
+            Eigen::MatrixXd interval_point(2, 1);
+            if (j == interval_num){
+                interval_point << new_vertex_2(0, 0), new_vertex_2(1, 0);
+            }
+            else{
+                interval_point << j * map_resolution_, 0.0;
+            }
+            Eigen::MatrixXd original_interval_point(2, 1);
+            original_interval_point = rotation_martrix.inverse() * interval_point + vertex_1_matrix;
+            Eigen::Vector3d point_3d(original_interval_point(0, 0),
+                                     original_interval_point(1, 0),
+                                     0.0);
+            Eigen::Vector2i point_index = Pose2GridIndex(point_3d);
+            map_data[(point_index[1] - 1) * map_x_size_ + point_index[0]] = 1;
+            // std::cout << "map_position" << (point_index[1] - 1) * map_x_size_ + point_index[0] << std::endl;
+        }
+    }
 }
 
 void HybridAstarNode::PubObstacleCallBack(){
@@ -162,6 +218,7 @@ bool HybridAstarNode::InitialHybridAstar(){
     this->get_parameter<int>("circle_num", this->circle_num_);
     this->get_parameter<double>("safe_dis", this->safe_dis_);
 
+    // print paramters
     RCLCPP_INFO(this->get_logger(), "max_v %f", max_v_);
     RCLCPP_INFO(this->get_logger(), "min_v %f", min_v_);
     RCLCPP_INFO(this->get_logger(), "max_steering_angle %f", max_steering_angle_);
@@ -235,7 +292,7 @@ bool HybridAstarNode::CollisionCheck(const Eigen::Vector3d & current_pose){
     Eigen::MatrixXd circle_position(circle_num_, 2);
 
     // we use fitted circles for collision check
-    double radius = 0.5 * sqrt(pow(vehicle_.length / circle_num_, 2) + pow(vehicle_.width, 2));
+    // double radius = 0.5 * sqrt(pow(vehicle_.length / circle_num_, 2) + pow(vehicle_.width, 2));
     for (int i = 0; i < circle_num_; ++i){
         double coefficient = (vehicle_.length - vehicle_.wheelbase) / 2 + vehicle_.wheelbase + vehicle_.length / circle_num_ * (0.5 - i);
         circle_position(i,0) = vehicle_.x + coefficient * cos(current_pose[2]);

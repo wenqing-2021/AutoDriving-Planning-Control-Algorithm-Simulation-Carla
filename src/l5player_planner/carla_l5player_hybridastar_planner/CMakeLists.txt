@@ -28,7 +28,8 @@ add_executable(hybridastar_visual
                src/hybridAstar_visualization.cpp)
 
 add_executable(hybridastar_search 
-               src/hybridAstar_search.cpp)
+               src/hybridAstar_search.cpp
+               src/util_tool.cpp)
 
 target_include_directories(hybridastar_visual PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
