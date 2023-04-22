@@ -1,4 +1,4 @@
-#include "carla_l5player_hybridastar_planner/hybridAstar.h"
+#include "carla_l5player_hybridastar_planner/hybridAstar_search.h"
 
 using namespace l5player::planner;
 using namespace std::chrono_literals;
@@ -140,7 +140,7 @@ void HybridAstarNode::SetObstacleData(const std::vector<std::pair<double, double
         }
         else{
             vertex_1 = obstacles_vector[i+1];
-            vertex_2 = obstacles_vector[i];
+            vertex_2 = obstacles_vector[i]; 
         }
         // record the obstacle point position
         vertex_1_matrix << vertex_1.first, vertex_1.second;
