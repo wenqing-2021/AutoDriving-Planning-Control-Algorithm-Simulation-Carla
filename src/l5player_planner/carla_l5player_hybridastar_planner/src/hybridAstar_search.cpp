@@ -164,6 +164,7 @@ void HybridAstarNode::SetObstacleData(const std::vector<std::pair<double, double
             Eigen::Vector3d point_3d(original_interval_point(0, 0),
                                      original_interval_point(1, 0),
                                      0.0);
+            obstacle_boundary_position.push_back(point_3d);
             Eigen::Vector2i point_index = Pose2GridIndex(point_3d);
             map_data[(point_index[1] - 1) * map_x_size_ + point_index[0]] = 1;
             // std::cout << "map_position" << (point_index[1] - 1) * map_x_size_ + point_index[0] << std::endl;
@@ -289,14 +290,20 @@ Eigen::Vector2i HybridAstarNode::Pose2GridIndex(const Eigen::Vector3d & vehicle_
 bool HybridAstarNode::CollisionCheck(const Eigen::Vector3d & current_pose){
     bool collision = false;
 
-    Eigen::MatrixXd circle_position(circle_num_, 2);
-
     // we use fitted circles for collision check
-    // double radius = 0.5 * sqrt(pow(vehicle_.length / circle_num_, 2) + pow(vehicle_.width, 2));
+    double radius = 0.5 * sqrt(pow(vehicle_.length / circle_num_, 2) + pow(vehicle_.width, 2));
     for (int i = 0; i < circle_num_; ++i){
         double coefficient = (vehicle_.length - vehicle_.wheelbase) / 2 + vehicle_.wheelbase + vehicle_.length / circle_num_ * (0.5 - i);
-        circle_position(i,0) = vehicle_.x + coefficient * cos(current_pose[2]);
-        circle_position(i,1) = vehicle_.y + coefficient * sin(current_pose[2]);
+        double circle_x = current_pose[0] + coefficient * cos(current_pose[2]);
+        double circle_y = current_pose[1] + coefficient * sin(current_pose[2]);
+        for (auto obs_position : obstacle_boundary_position){
+            double obs_x = obs_position[0];
+            double obs_y = obs_position[1];
+            double distance = std::sqrt(std::pow(circle_x - obs_x, 2) + std::pow(circle_y - obs_y, 2));
+            if (distance <= radius){
+                return true;
+            }
+        }
     }
 
     return collision;

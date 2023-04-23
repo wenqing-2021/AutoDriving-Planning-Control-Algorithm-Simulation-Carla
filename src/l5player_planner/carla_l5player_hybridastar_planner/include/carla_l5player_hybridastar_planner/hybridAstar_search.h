@@ -61,7 +61,7 @@ class HybridAstarNode : public rclcpp :: Node {
         GridNodePtr **GridNodeMap;
         uint8_t * map_data; // 0 --> no obstacle, 1 --> has obstacle
         std::vector<std::pair<double, double>> obstacle_position;
-        std::multimap<double, Eigen::Vector3d> obstacle_boundary_position;
+        std::vector<Eigen::Vector3d> obstacle_boundary_position;
         std::vector<int> obstalce_vertex_num;
 
         // vehicle settings
