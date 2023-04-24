@@ -2,12 +2,13 @@ hybridastar_search:
   ros__parameters:
   ## obstacle position
     obstacle_path: "src/l5player_planner/carla_l5player_hybridastar_planner/data/obstacle_data.csv"
+  
   ## hybrid settings
     steering_num: 5
     discrete_num: 10 # discrete the expansion length for collision check
     radius_flag: 5.0 # m, in this circle, try rs curve
     extend_num: 1 # this is a trick, extend the gear change point for a smooth path
-    ## coefficient
+    # coefficient
     coeffi_heading: 0.5 # cost for heading change
     coeffi_gear: 1.0 # coeffi for g_gear
     g_gear: 1.5 # cost for the change gear

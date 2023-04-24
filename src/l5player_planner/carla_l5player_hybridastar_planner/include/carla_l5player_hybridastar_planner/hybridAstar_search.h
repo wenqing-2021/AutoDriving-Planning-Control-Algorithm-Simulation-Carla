@@ -1,9 +1,11 @@
 #ifndef PLANNER_HYBRIDASTAR_SEARCH_H_
 #define PLANNER_HYBRIDASTAR_SEARCH_H_
+#pragma once
 
 #include "carla_l5player_hybridastar_planner/node3d.h"
 #include "carla_l5player_hybridastar_planner/common.h"
 #include "carla_l5player_hybridastar_planner/util_tool.h"
+#include "carla_l5player_hybridastar_planner/rs_curve.h"
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
@@ -35,10 +37,11 @@ class HybridAstarNode : public rclcpp :: Node {
         void SetObstacleData(const std::vector<std::pair<double, double>>& obstacles_vector);
         void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_pose_msg);
         void PI2PI(double & theta);
+        bool SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose);
     
     private:
         // bool SetObstacles();
-        bool ExpandNode(const GridNodePtr & current_pt);
+        void ExpandNode(const GridNodePtr & current_pt);
 
         double ComputeH(const GridNodePtr &node1, const GridNodePtr &node2);
         double ComputeG(const GridNodePtr &node1, const GridNodePtr &node2);
@@ -65,12 +68,14 @@ class HybridAstarNode : public rclcpp :: Node {
         std::vector<int> obstalce_vertex_num;
 
         // vehicle settings
-        bool reach_ = false; // if reach the flag, change to true
+        bool reach_ = false; // if reach the goal, change to true
         bool start_ = false; // if get the start position, change to true. if reach the goal ,change to false 
         double max_steering_angle_;
         double min_steering_angle_;
         double max_v_;
         double min_v_;
+        // obstacle data file path
+        std::string obstacle_data_path_;
 
         // hybrid g score computation coefficient
         int steering_num_; // discrete the steering angle
@@ -85,8 +90,11 @@ class HybridAstarNode : public rclcpp :: Node {
         int circle_num_;
         double safe_dis_;
 
-        // obstacle path
-        std::string obstacle_path_;
+        // rs curve planning
+        ReedsSheppPath rs_planner;
+
+        // final path
+        Path final_path;
         
         VehicleState vehicle_;
         Eigen::Vector3d goal_pose;

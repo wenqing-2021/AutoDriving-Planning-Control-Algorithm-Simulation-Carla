@@ -39,3 +39,34 @@ double GetVectorAngle(const std::pair<double, double>& vector_1, const std::pair
     
 }
 
+double arrangeAngle(double angle){
+    while(angle>M_PI) angle -= 2*M_PI;
+    while(angle<-M_PI) angle += 2*M_PI;
+
+    return angle;
+}
+
+double polar_r(double x, double y){
+    return sqrt(x*x + y*y);
+}
+
+double polar_theta(double x, double y){
+    return atan2(y, x);
+}
+
+void calc_tauOmega(double& tau, double& omega, double u , double v, double xi, double eta, double phi){
+    double delta = arrangeAngle(u-v);
+    double A = sin(u) - sin(delta);
+    double B = cos(u) - cos(delta) - 1.0;
+
+    double t1 = atan2(eta * A - xi * B, xi * A + eta * B);
+    double t2 = 2.0 * (cos(delta) - cos(v) - cos(u)) + 3.0;
+
+    if(t2 < 0.0){
+        tau = arrangeAngle(t1 + M_PI);
+    }else{
+        tau = arrangeAngle(t1);
+    }
+
+    omega = arrangeAngle(tau - u + v - phi);
+}

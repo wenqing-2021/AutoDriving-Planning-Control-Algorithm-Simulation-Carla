@@ -1,5 +1,6 @@
 #ifndef COMMON_H_
 #define COMMON_H_
+#pragma once
 
 #include <fstream>
 #include <iostream>
@@ -83,8 +84,19 @@ struct EulerAngles {
     double roll, pitch, yaw;
 };
 
-
-
 typedef std::shared_ptr<LateralControlError> LateralControlErrorPtr;
 
+class Path
+{
+public:
+    Path() = default;
+
+    std::vector<double> lengths; //course segment length
+    std::vector<std::string> ctypes; //course segment type char ("S": straight, "L": left, "R": right)
+    double L = 0; //total length of the path
+    std::vector<double> x;
+    std::vector<double> y;
+    std::vector<double> yaw;
+    std::vector<bool> directions; //directions (true:forward, bool:backward)
+};
 #endif

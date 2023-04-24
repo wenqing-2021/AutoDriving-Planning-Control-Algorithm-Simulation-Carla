@@ -1,5 +1,6 @@
 #ifndef HYBRIDASTAR_NODE_H_
 #define HYBRIDASTAR_NODE_H_
+#pragma once
 
 #include <Eigen/Eigen>
 #include <rclcpp/rclcpp.hpp>

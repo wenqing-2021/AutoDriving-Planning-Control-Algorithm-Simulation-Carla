@@ -74,8 +74,8 @@ bool HybridAstarNode::InitialMap(){
 
 bool HybridAstarNode::InitialObstacle(){
     this->declare_parameter<std::string>("obstacle_path", "obstacle_inital_path");
-    this->get_parameter<std::string>("obstacle_path", obstacle_path_);
-    std::cout << "obstacle_path: " << obstacle_path_ << std::endl;
+    this->get_parameter<std::string>("obstacle_path", obstacle_data_path_);
+    std::cout << "obstacle_data_file_path is: " << obstacle_data_path_ << std::endl;
     RCLCPP_INFO(this->get_logger(), "Start initial Obstacles position ... ");
     LoadObstacle();
 
@@ -84,7 +84,7 @@ bool HybridAstarNode::InitialObstacle(){
 }
 
 void HybridAstarNode::LoadObstacle(){
-    std::ifstream infile(obstacle_path_, std::ios::in);
+    std::ifstream infile(obstacle_data_path_, std::ios::in);
     assert(infile.is_open());
     std::string line;
     std::vector<std::pair<double, double>> obstacle_i_vector;
@@ -343,7 +343,7 @@ double HybridAstarNode::ComputeG(const GridNodePtr &node1, const GridNodePtr &no
 }
 
 
-bool HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
+void HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
     Eigen::Vector3d current_pose = current_pt->pose;
     int gear[] = {1, -1};
     double delta_angle = (max_steering_angle_ - min_steering_angle_) / (steering_num_ - 1);
@@ -405,19 +405,55 @@ bool HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
                     node_i->FatherNode = current_pt;
                     node_i->pose = current_pose;
                     node_i->gear = gear_i;
+                    openset.insert(std::make_pair(node_i->f_score, node_i));
                 }
             }
         }
     }
-    
-
-    return true;
-    
 }
 
-// bool HybridAstarNode::SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose){
-//     return true;
-// }
+bool HybridAstarNode::SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose){
+    Eigen::Vector3d current_pose = start_pose;
+    double goal_x, goal_y, goal_theta = end_pose[0], end_pose[1], end_pose[2];
+    double min_turn_raduis = vehicle_.wheelbase / tan(min_steering_angle_);
+    double max_curvature = 1 / min_turn_raduis;
+    while(!reach_){
+        // check in the raduis
+        double goal_distance = std::sqrt(std::pow(current_pose[0] - goal_pose[0], 2) + 
+                                         std::pow(current_pose[1] - goal_pose[1], 2));
+        if (goal_distance <= radius_flag_){
+            Path rs_path = rs_planner.planning(current_pose[0], current_pose[1], current_pose[2],
+                                          goal_x, goal_y, goal_theta, max_curvature, map_resolution_);
+            // CHECK collision in the rs curve
+            bool rs_collision = false;
+            int rs_i = 0;
+            while(!rs_collision && rs_i < rs_path.x.size()){
+                Eigen::Vector3d rs_pose(rs_path.x[rs_i], rs_path.y[rs_i], rs_path.yaw[rs_i]);
+                rs_collision = HybridAstarNode::CollisionCheck(rs_pose);
+                rs_i++;
+            }
+            // if not collision, reach goal
+            if (!rs_collision){
+                reach_ = true;
+                // update the final path
+                // 1- add the rs path into the final_path
+                int i = 0;
+                while (i < rs_path.x.size()){
+                    final_path.x.push_back(rs_path.x[i]);
+                    final_path.y.push_back(rs_path.y[i]);
+                    final_path.yaw.push_back(rs_path.yaw[i]);
+                    i++;
+                }
+                // 2- add the hybrid search path into the final_path
+
+                // 3- reverse all points (start --> end)
+            }
+        }
+        // if collision or not in the radius flag, chose node and expand it
+        HybridAstarNode::ExpandNode((*openset.begin()).second);
+    }
+    return true;
+}
 
 
 int main(int argc, char **argv){

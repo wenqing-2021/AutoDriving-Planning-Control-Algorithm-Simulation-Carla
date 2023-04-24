@@ -1,5 +1,6 @@
 #ifndef PLANNER_HYBRIDASTAR_VISUAL_H_
 #define PLANNER_HYBRIDASTAR_VISUAL_H_
+#pragma once
 
 #include <rclcpp/rclcpp.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
