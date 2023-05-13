@@ -27,23 +27,28 @@ class HybridAstarNode : public rclcpp :: Node {
         HybridAstarNode();
         ~HybridAstarNode(){};
         
-        // bool SearchPath(const Eigen::Vector3d & start_pt, 
-        //                 const Eigen::Vector3d & end_pt);
-        
         bool InitialMap();
         bool InitialHybridAstar();
         bool InitialObstacle();
         void LoadObstacle();
         void SetObstacleData(const std::vector<std::pair<double, double>>& obstacles_vector);
-        void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_pose_msg);
+        
         void PI2PI(double & theta);
-        bool SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose);
+        bool SearchPath();
+
+        void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_pose_msg);
+        void GoalPoseCallback(geometry_msgs::msg::PoseStamped::SharedPtr goal_pose_msg);
+
+        // pub obstacle position
+        void PubObstacleCallback();
+        // pub planned path
+        void PubPathCallback();
     
     private:
         // bool SetObstacles();
         void ExpandNode(const GridNodePtr & current_pt);
 
-        double ComputeH(const GridNodePtr &node1, const GridNodePtr &node2);
+        double ComputeH(const GridNodePtr &node1);
         double ComputeG(const GridNodePtr &node1, const GridNodePtr &node2);
 
         bool CollisionCheck(const Eigen::Vector3d & current_pose);
@@ -52,9 +57,6 @@ class HybridAstarNode : public rclcpp :: Node {
 
         Eigen::Vector2d GridIndex2Posi(const Eigen::Vector2i & grid_index);
         Eigen::Vector2i Pose2GridIndex(const Eigen::Vector3d & vehicle_pose);
-
-        // pub obstacle position
-        void PubObstacleCallBack();
         
         // map configuration
         double map_resolution_;
@@ -97,18 +99,22 @@ class HybridAstarNode : public rclcpp :: Node {
         Path final_path;
         
         VehicleState vehicle_;
-        Eigen::Vector3d goal_pose;
-        Eigen::Vector3d start_pose;
+        Eigen::Vector3d goal_pose_;
+        Eigen::Vector3d start_pose_;
         std::multimap<double, GridNodePtr> openset;
 
-        // world client
+        // world client & subscriber
         rclcpp::SyncParametersClient::SharedPtr world_param_client_;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr vehicle_pose_sub_;
+
+        // goal subscriber
+        rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_sub_;
 
         // publisher
         rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr obstacle_position_pub_;
         rclcpp::Publisher<std_msgs::msg::Int32MultiArray>::SharedPtr obstacle_vertex_num_pub_;
         rclcpp::TimerBase::SharedPtr obstacle_pub_timer_;
+        rclcpp::Publisher<Path>::SharedPtr path_pub_;
 };
 
 } // planner

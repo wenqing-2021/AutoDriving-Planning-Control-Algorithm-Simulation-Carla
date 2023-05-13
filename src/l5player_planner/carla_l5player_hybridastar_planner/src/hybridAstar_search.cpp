@@ -17,16 +17,24 @@ HybridAstarNode::HybridAstarNode() : Node("hybridastar_search"){
         RCLCPP_WARN(this->get_logger(), "Failed to Get Obstacle parameters");
     }    
 
+    // update vehicle pose
     vehicle_pose_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
                                     "/carla/ego_vehicle/odometry", 
-                                    10, 
+                                    1, 
                                     std::bind(&HybridAstarNode::VehiclePoseCallback, this, std::placeholders::_1));
+
+    // update goal pose
+    goal_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
+                                    "/goal_pose",
+                                    1,
+                                    std::bind(&HybridAstarNode::GoalPoseCallback, this, std::placeholders::_1));
     
     obstacle_position_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/hybridastar/search/obstacl_pos_pub", 10);
     obstacle_vertex_num_pub_ = this->create_publisher<std_msgs::msg::Int32MultiArray>("/hybridastar/search/obstacl_vertex_num_pub", 10);
+    path_pub_ = this->create_publisher<Path>("/hybridastar/search/astar_path", 10);
 
     obstacle_pub_timer_ = this->create_wall_timer(
-        10ms, std::bind(&HybridAstarNode::PubObstacleCallBack, this));
+        10ms, std::bind(&HybridAstarNode::PubObstacleCallback, this));
 
 }
 
@@ -172,7 +180,7 @@ void HybridAstarNode::SetObstacleData(const std::vector<std::pair<double, double
     }
 }
 
-void HybridAstarNode::PubObstacleCallBack(){
+void HybridAstarNode::PubObstacleCallback(){
     std_msgs::msg::Float64MultiArray obstacle_position_array;
     std_msgs::msg::Int32MultiArray obstacle_vertex_num_array;
     for (auto point : obstacle_position){
@@ -184,6 +192,12 @@ void HybridAstarNode::PubObstacleCallBack(){
     }
     obstacle_position_pub_->publish(obstacle_position_array);
     obstacle_vertex_num_pub_->publish(obstacle_vertex_num_array);
+}
+
+void HybridAstarNode::PubPathCallback(){
+    if (reach_){
+        path_pub_->publish(final_path);
+    }
 }
 
 bool HybridAstarNode::InitialHybridAstar(){
@@ -247,12 +261,29 @@ void HybridAstarNode::VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr veh
     vehicle_yaw -= M_PI/2 ;
     PI2PI(vehicle_yaw);
 
+    vehicle_.x = vehicle_x;
+    vehicle_.y = vehicle_y;
+    vehicle_.yaw = vehicle_yaw;
+
     if (!start_){
-        start_pose[0] = vehicle_x;
-        start_pose[1] = vehicle_y;
-        start_pose[2] = vehicle_yaw;
+        start_pose_[0] = vehicle_x;
+        start_pose_[1] = vehicle_y;
+        start_pose_[2] = vehicle_yaw;
 
         start_ = true;
+    }
+}
+
+void HybridAstarNode::GoalPoseCallback(geometry_msgs::msg::PoseStamped::SharedPtr goal_pose_msg){
+    if (!reach_ && start_){
+        goal_pose_[0] = goal_pose_msg->pose.position.x;
+        goal_pose_[1] = goal_pose_msg->pose.position.y;
+        tf2::Quaternion quat_tf;
+        tf2::convert(goal_pose_msg->pose.orientation, quat_tf);
+        double goal_roll, goal_pitch, goal_yaw;
+        tf2::Matrix3x3(quat_tf).getRPY(goal_roll, goal_pitch, goal_yaw);
+        PI2PI(goal_yaw);
+        goal_pose_[2] = goal_yaw;
     }
 }
 
@@ -309,12 +340,12 @@ bool HybridAstarNode::CollisionCheck(const Eigen::Vector3d & current_pose){
     return collision;
 }
 
-double HybridAstarNode::ComputeH(const GridNodePtr &node1, const GridNodePtr &node2){
+double HybridAstarNode::ComputeH(const GridNodePtr &node1){
     double distance;
 
     // use manhattan distance
     Eigen::Vector2i index_1 = node1->index;
-    Eigen::Vector2i index_2 = node2->index;
+    Eigen::Vector2i index_2 = Pose2GridIndex(goal_pose_);
 
     distance = std::sqrt(pow((index_1[0] - index_2[0]), 2) + pow((index_1[1] - index_2[1]), 2));
 
@@ -401,7 +432,7 @@ void HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
                     // add it into the openset
                     node_i->id = 1;
                     node_i->g_score = ComputeG(current_pt, node_i);
-                    node_i->f_score = node_i->g_score + ComputeH(current_pt, node_i);
+                    node_i->f_score = node_i->g_score + ComputeH(node_i);
                     node_i->FatherNode = current_pt;
                     node_i->pose = current_pose;
                     node_i->gear = gear_i;
@@ -412,18 +443,22 @@ void HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
     }
 }
 
-bool HybridAstarNode::SearchPath(const Eigen::Vector3d & start_pose, const Eigen::Vector3d & end_pose){
-    Eigen::Vector3d current_pose = start_pose;
-    double goal_x, goal_y, goal_theta = end_pose[0], end_pose[1], end_pose[2];
+bool HybridAstarNode::SearchPath(){
+    Eigen::Vector3d current_pose = start_pose_;
+    // add start node into the openset
+    GridNodePtr current_ptr = new GridNode(Pose2GridIndex(current_pose), current_pose);
+    current_ptr->g_score = 0;
+    current_ptr->f_score = ComputeH(current_ptr);
+    double goal_x, goal_y, goal_theta = goal_pose_[0], goal_pose_[1], goal_pose_[2];
     double min_turn_raduis = vehicle_.wheelbase / tan(min_steering_angle_);
     double max_curvature = 1 / min_turn_raduis;
-    while(!reach_){
+    while(!reach_ && !openset.empty()){
         // check in the raduis
-        double goal_distance = std::sqrt(std::pow(current_pose[0] - goal_pose[0], 2) + 
-                                         std::pow(current_pose[1] - goal_pose[1], 2));
+        double goal_distance = std::sqrt(std::pow(current_pose[0] - goal_pose_[0], 2) + 
+                                         std::pow(current_pose[1] - goal_pose_[1], 2));
         if (goal_distance <= radius_flag_){
             Path rs_path = rs_planner.planning(current_pose[0], current_pose[1], current_pose[2],
-                                          goal_x, goal_y, goal_theta, max_curvature, map_resolution_);
+                                               goal_x, goal_y, goal_theta, max_curvature, map_resolution_);
             // CHECK collision in the rs curve
             bool rs_collision = false;
             int rs_i = 0;
@@ -445,12 +480,22 @@ bool HybridAstarNode::SearchPath(const Eigen::Vector3d & start_pose, const Eigen
                     i++;
                 }
                 // 2- add the hybrid search path into the final_path
-
-                // 3- reverse all points (start --> end)
+                while (current_ptr->FatherNode != NULL){
+                    final_path.x.insert(final_path.x.begin(), current_ptr->pose[0]);
+                    final_path.y.insert(final_path.y.begin(), current_ptr->pose[1]);
+                    final_path.yaw.insert(final_path.yaw.begin(), current_ptr->pose[2]);
+                    current_ptr = current_ptr->FatherNode;
+                }
+                break;
             }
         }
-        // if collision or not in the radius flag, chose node and expand it
-        HybridAstarNode::ExpandNode((*openset.begin()).second);
+        // if collision or not in the radius flag, and expand current node and chose next one
+        HybridAstarNode::ExpandNode(current_ptr);
+        current_ptr = (*openset.begin()).second;
+        current_pose = current_ptr->pose;
+        // remove current ptr from openset
+        current_ptr->id == -1;
+        openset.erase(openset.begin());
     }
     return true;
 }

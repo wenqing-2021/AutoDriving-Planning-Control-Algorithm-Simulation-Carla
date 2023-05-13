@@ -28,10 +28,9 @@ class VisualNode : public rclcpp::Node{
         void VisualBoundaryCallback();
         void VisualVechicleCallback();
         void VisualObstacleCallback();
+        void VisualPathCallback();
 
         visualization_msgs::msg::MarkerArray GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points);
-
-        void VisualPathCallback(std::vector<GridNode>);
 
         bool GetBoundaryVertex();
         bool GetVehicleVertex();
@@ -39,6 +38,7 @@ class VisualNode : public rclcpp::Node{
         void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_msgs);
         void ObstaclePosCallback(std_msgs::msg::Float64MultiArray::SharedPtr obstacle_position_msgs);
         void ObsVertexNumCallback(std_msgs::msg::Int32MultiArray::SharedPtr obstacle_vertex_num_msgs);
+        void AstarPathCallback(Path astar_path_msgs);
     
     private:
         rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr visualboundary_pub_;
@@ -61,6 +61,8 @@ class VisualNode : public rclcpp::Node{
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr vehicle_pose_sub_;
         rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr obstacle_position_sub_;
         rclcpp::Subscription<std_msgs::msg::Int32MultiArray>::SharedPtr obstacle_vertex_num_sub_;
+        rclcpp::Subscription<Path>::SharedPtr astar_path_sub_;
+
         VehicleState vehicle_;
 
         Eigen::Vector2d rl_point;

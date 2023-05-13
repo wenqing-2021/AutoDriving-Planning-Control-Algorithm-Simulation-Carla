@@ -13,21 +13,17 @@ VisualNode::VisualNode() : Node("hybridastar_visual"){
     }
 
     vehicle_pose_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
-                                    "/carla/ego_vehicle/odometry", 
-                                    10, 
-                                    std::bind(&VisualNode::VehiclePoseCallback, this, std::placeholders::_1));
+        "/carla/ego_vehicle/odometry", 10, std::bind(&VisualNode::VehiclePoseCallback, this, std::placeholders::_1));
     
     obstacle_vertex_num_sub_ = this->create_subscription<std_msgs::msg::Int32MultiArray>(
-                                    "/hybridastar/search/obstacl_vertex_num_pub", 
-                                    10,
-                                    std::bind(&VisualNode::ObsVertexNumCallback, this, std::placeholders::_1));
+        "/hybridastar/search/obstacl_vertex_num_pub", 10, std::bind(&VisualNode::ObsVertexNumCallback, this, std::placeholders::_1));
     
     obstacle_position_sub_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
-                                    "/hybridastar/search/obstacl_pos_pub", 
-                                    10, 
-                                    std::bind(&VisualNode::ObstaclePosCallback, this, std::placeholders::_1));
+        "/hybridastar/search/obstacl_pos_pub", 10, std::bind(&VisualNode::ObstaclePosCallback, this, std::placeholders::_1));
+    astar_path_sub_ = this->create_subscription<Path>(
+        "/hybridastar/search/astar_path", 10, std::bind(&VisualNode::AstarPathCallback, this, std::placeholders::_1));
 
-    visualpath_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/path_pub", 10);
+    visualpath_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/astarpath_pub", 10);
     visualboundary_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/boundary_pub", 10);
     visualvehicle_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/vehicle_pub", 10);
     visualobstacle_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/obstacle_pub", 10);
@@ -40,6 +36,9 @@ VisualNode::VisualNode() : Node("hybridastar_visual"){
 
     obstacle_timer_ = this->create_wall_timer(
         10ms, std::bind(&VisualNode::VisualObstacleCallback, this));
+    
+    path_timer_ = this->create_wall_timer(
+        10ms, std::bind(&VisualNode::VisualPathCallback, this));
 }
 
 bool VisualNode::GetBoundaryVertex(){
@@ -181,6 +180,10 @@ void VisualNode::VisualObstacleCallback(){
     visualobstacle_pub_->publish(lines_pub);
 }
 
+void VisualNode::VisualPathCallback(){
+    
+}
+
 MarkerArray VisualNode::GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points){
     MarkerArray result_lines_;
     for(int i = 0; i < int(polygon_points.size()); i++){
@@ -206,6 +209,10 @@ MarkerArray VisualNode::GetPolygon(const std::vector<geometry_msgs::msg::Point>&
         result_lines_.markers.push_back(line_strip);
     }
     return result_lines_;
+}
+
+void VisualNode::AstarPathCallback(Path astar_path){
+
 }
 
 int main(int argc, char **argv){
