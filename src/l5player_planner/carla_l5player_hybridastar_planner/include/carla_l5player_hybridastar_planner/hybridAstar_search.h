@@ -93,7 +93,7 @@ class HybridAstarNode : public rclcpp :: Node {
         double safe_dis_;
 
         // rs curve planning
-        ReedsSheppPath rs_planner;
+        ReedsSheppPath* rs_planner;
 
         // final path
         Path final_path;
@@ -114,7 +114,7 @@ class HybridAstarNode : public rclcpp :: Node {
         rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr obstacle_position_pub_;
         rclcpp::Publisher<std_msgs::msg::Int32MultiArray>::SharedPtr obstacle_vertex_num_pub_;
         rclcpp::TimerBase::SharedPtr obstacle_pub_timer_;
-        rclcpp::Publisher<Path>::SharedPtr path_pub_;
+        rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr path_pub_;
 };
 
 } // planner

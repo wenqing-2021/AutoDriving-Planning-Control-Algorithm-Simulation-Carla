@@ -31,7 +31,7 @@ HybridAstarNode::HybridAstarNode() : Node("hybridastar_search"){
     
     obstacle_position_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/hybridastar/search/obstacl_pos_pub", 10);
     obstacle_vertex_num_pub_ = this->create_publisher<std_msgs::msg::Int32MultiArray>("/hybridastar/search/obstacl_vertex_num_pub", 10);
-    path_pub_ = this->create_publisher<Path>("/hybridastar/search/astar_path", 10);
+    path_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/hybridastar/search/astar_path", 10);
 
     obstacle_pub_timer_ = this->create_wall_timer(
         10ms, std::bind(&HybridAstarNode::PubObstacleCallback, this));
@@ -196,7 +196,12 @@ void HybridAstarNode::PubObstacleCallback(){
 
 void HybridAstarNode::PubPathCallback(){
     if (reach_){
-        path_pub_->publish(final_path);
+        std_msgs::msg::Float64MultiArray astar_path_point_array;
+        for (int i = 0; i < final_path.x.size(); ++i){
+            astar_path_point_array.data.push_back(final_path.x[i]);
+            astar_path_point_array.data.push_back(final_path.y[i]);
+        }
+        path_pub_->publish(astar_path_point_array);
     }
 }
 
@@ -445,20 +450,24 @@ void HybridAstarNode::ExpandNode(const GridNodePtr & current_pt){
 
 bool HybridAstarNode::SearchPath(){
     Eigen::Vector3d current_pose = start_pose_;
+    Eigen::Vector3d goal_pose = goal_pose_;
+    rs_planner = new ReedsSheppPath();
     // add start node into the openset
     GridNodePtr current_ptr = new GridNode(Pose2GridIndex(current_pose), current_pose);
     current_ptr->g_score = 0;
     current_ptr->f_score = ComputeH(current_ptr);
-    double goal_x, goal_y, goal_theta = goal_pose_[0], goal_pose_[1], goal_pose_[2];
+    // double goal_x, goal_y, goal_theta = goal_pose_[0], goal_pose_[1], goal_pose_[2];
     double min_turn_raduis = vehicle_.wheelbase / tan(min_steering_angle_);
     double max_curvature = 1 / min_turn_raduis;
+    RCLCPP_INFO(this->get_logger(), "Start to search the map");
     while(!reach_ && !openset.empty()){
         // check in the raduis
         double goal_distance = std::sqrt(std::pow(current_pose[0] - goal_pose_[0], 2) + 
                                          std::pow(current_pose[1] - goal_pose_[1], 2));
         if (goal_distance <= radius_flag_){
-            Path rs_path = rs_planner.planning(current_pose[0], current_pose[1], current_pose[2],
-                                               goal_x, goal_y, goal_theta, max_curvature, map_resolution_);
+            RCLCPP_INFO(this->get_logger(), "Try rs curve to connect the goal");
+            Path rs_path = rs_planner->rs_planning(current_pose[0], current_pose[1], current_pose[2],
+                                                   goal_pose[0], goal_pose[1], goal_pose[2], max_curvature, map_resolution_);
             // CHECK collision in the rs curve
             bool rs_collision = false;
             int rs_i = 0;

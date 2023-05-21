@@ -29,6 +29,7 @@ add_executable(hybridastar_visual
 
 add_executable(hybridastar_search 
                src/hybridAstar_search.cpp
+               src/rs_curve.cpp
                src/util_tool.cpp)
 
 target_include_directories(hybridastar_visual PUBLIC

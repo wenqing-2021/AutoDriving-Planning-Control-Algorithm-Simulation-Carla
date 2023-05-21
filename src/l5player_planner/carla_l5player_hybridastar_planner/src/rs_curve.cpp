@@ -1,6 +1,6 @@
 #include "carla_l5player_hybridastar_planner/rs_curve.h"
 
-Path ReedsSheppPath::planning(double sx, double sy, double syaw, double gx, double gy, double gyaw, double max_curvature, double step_size=0.2)
+Path ReedsSheppPath::rs_planning(double sx, double sy, double syaw, double gx, double gy, double gyaw, double max_curvature, double step_size=0.2)
 {
     std::vector<Path> paths;
     calc_allPath(paths, sx, sy, syaw, gx, gy, gyaw, max_curvature, step_size);

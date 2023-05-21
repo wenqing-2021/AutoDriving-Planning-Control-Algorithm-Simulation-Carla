@@ -15,6 +15,7 @@
 #include <chrono>
 #include <string>
 #include <math.h>
+#include <time.h>
 #include <numeric>
 
 #include "carla_l5player_hybridastar_planner/node3d.h"
@@ -30,7 +31,7 @@ class VisualNode : public rclcpp::Node{
         void VisualObstacleCallback();
         void VisualPathCallback();
 
-        visualization_msgs::msg::MarkerArray GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points);
+        visualization_msgs::msg::MarkerArray GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points, int a = 0);
 
         bool GetBoundaryVertex();
         bool GetVehicleVertex();
@@ -38,7 +39,7 @@ class VisualNode : public rclcpp::Node{
         void VehiclePoseCallback(nav_msgs::msg::Odometry::SharedPtr vehicle_msgs);
         void ObstaclePosCallback(std_msgs::msg::Float64MultiArray::SharedPtr obstacle_position_msgs);
         void ObsVertexNumCallback(std_msgs::msg::Int32MultiArray::SharedPtr obstacle_vertex_num_msgs);
-        void AstarPathCallback(Path astar_path_msgs);
+        void AstarPathCallback(std_msgs::msg::Float64MultiArray::SharedPtr astar_path_msgs);
     
     private:
         rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr visualboundary_pub_;
@@ -56,12 +57,13 @@ class VisualNode : public rclcpp::Node{
         visualization_msgs::msg::MarkerArray boundary_lines_;
         visualization_msgs::msg::MarkerArray vehicle_lines_;
         visualization_msgs::msg::MarkerArray obstacle_lines_;
+        visualization_msgs::msg::MarkerArray path_lines_;
         std::vector<visualization_msgs::msg::MarkerArray> obstacle_lines_vector;
 
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr vehicle_pose_sub_;
         rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr obstacle_position_sub_;
         rclcpp::Subscription<std_msgs::msg::Int32MultiArray>::SharedPtr obstacle_vertex_num_sub_;
-        rclcpp::Subscription<Path>::SharedPtr astar_path_sub_;
+        rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr astar_path_sub_;
 
         VehicleState vehicle_;
 

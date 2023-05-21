@@ -21,7 +21,7 @@ public:
     ReedsSheppPath(){};
     ~ReedsSheppPath(){};
 
-    Path planning(double sx, double sy, double syaw, double gx, double gy, double gyaw, double max_curvature, double step_size);
+    Path rs_planning(double sx, double sy, double syaw, double gx, double gy, double gyaw, double max_curvature, double step_size);
     void calc_allPath(std::vector<Path>& paths, double sx, double sy, double syaw, double gx, double gy, double gyaw, double max_curvature, double step_size);
 
 private:

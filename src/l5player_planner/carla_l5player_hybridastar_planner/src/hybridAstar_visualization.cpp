@@ -20,7 +20,8 @@ VisualNode::VisualNode() : Node("hybridastar_visual"){
     
     obstacle_position_sub_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
         "/hybridastar/search/obstacl_pos_pub", 10, std::bind(&VisualNode::ObstaclePosCallback, this, std::placeholders::_1));
-    astar_path_sub_ = this->create_subscription<Path>(
+    
+    astar_path_sub_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
         "/hybridastar/search/astar_path", 10, std::bind(&VisualNode::AstarPathCallback, this, std::placeholders::_1));
 
     visualpath_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/hybridastar/visual/astarpath_pub", 10);
@@ -147,7 +148,7 @@ void VisualNode::ObstaclePosCallback(std_msgs::msg::Float64MultiArray::SharedPtr
             obstacle_points_vector.push_back(point_i);
         }
         start = end;
-        obstacle_lines_ = GetPolygon(obstacle_points_vector);
+        obstacle_lines_ = GetPolygon(obstacle_points_vector, start);
         int index = 0;
         for (auto& each_line : obstacle_lines_.markers){
             each_line.id = start - index;
@@ -181,16 +182,16 @@ void VisualNode::VisualObstacleCallback(){
 }
 
 void VisualNode::VisualPathCallback(){
-    
+    visualpath_pub_->publish(path_lines_);
 }
 
-MarkerArray VisualNode::GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points){
+MarkerArray VisualNode::GetPolygon(const std::vector<geometry_msgs::msg::Point>& polygon_points, int start_idx){
     MarkerArray result_lines_;
     for(int i = 0; i < int(polygon_points.size()); i++){
         Marker line_strip;
         line_strip.header.frame_id = "/map";
         line_strip.header.stamp = this->get_clock()->now();
-        line_strip.id = i;
+        line_strip.id = i + start_idx;
         line_strip.ns = "lines";
         line_strip.type = Marker::LINE_STRIP;
         line_strip.action = Marker::ADD;
@@ -211,7 +212,36 @@ MarkerArray VisualNode::GetPolygon(const std::vector<geometry_msgs::msg::Point>&
     return result_lines_;
 }
 
-void VisualNode::AstarPathCallback(Path astar_path){
+void VisualNode::AstarPathCallback(std_msgs::msg::Float64MultiArray::SharedPtr astar_path_msgs){
+    std::vector<double> point_vector = astar_path_msgs->data;
+
+    for (int i = 0; i < point_vector.size() - 2; ){
+        Marker line_strip;
+
+        line_strip.header.frame_id = "/map";
+        line_strip.header.stamp = this->get_clock()->now();
+        line_strip.id = i;
+        line_strip.ns = "lines";
+        line_strip.type = Marker::LINE_STRIP;
+        line_strip.action = Marker::ADD;
+        line_strip.scale.x = 0.2;
+        line_strip.color.b = 1.0; // blue
+        line_strip.color.a = 1.0;
+        geometry_msgs::msg::Point point_1;
+        geometry_msgs::msg::Point point_2;
+        point_1.x = point_vector[i];
+        point_1.y = point_vector[i+1];
+        point_2.x = point_vector[i+2];
+        point_2.y = point_vector[i+3];
+
+        line_strip.points.push_back(point_1);
+        line_strip.points.push_back(point_2);
+
+        path_lines_.markers.push_back(line_strip);
+
+        i += 2;
+    }
+
 
 }
 
